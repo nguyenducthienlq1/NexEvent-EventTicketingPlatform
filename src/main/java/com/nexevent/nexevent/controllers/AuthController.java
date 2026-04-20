@@ -23,14 +23,15 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -120,6 +121,57 @@ public class AuthController {
 
         } catch (BadCredentialsException e) {
             throw new IdInvalidException("Email hoặc mật khẩu không chính xác!");
+        }
+    }
+    @PostMapping("/refresh")
+    @ApiMessage("Làm mới token thành công")
+    @Operation(summary = "Refresh access token", description = "Cấp lại Access Token mới dựa vào Refresh Token đính kèm trong Cookie")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Làm mới token thành công"),
+            @ApiResponse(responseCode = "400", description = "Token không hợp lệ hoặc đã hết hạn")
+    })
+    public ResponseEntity<ResLoginDTO> refreshToken(
+            @CookieValue(name = REFRESH_TOKEN_COOKIE_NAME, defaultValue = "") String refreshToken) throws IdInvalidException {
+        if (refreshToken.isEmpty()) {
+            throw new IdInvalidException("Không tìm thấy Refresh Token trong Cookie. Vui lòng đăng nhập lại!");
+        }
+
+        try {
+            Jwt decodedToken = securityUtil.checkValidRefreshToken(refreshToken);
+            String email = decodedToken.getSubject();
+            User user = userService.getUserByEmail(email)
+                    .orElseThrow(() -> new IdInvalidException("Tài khoản không tồn tại!"));
+
+            if (!user.isActive()){
+                throw new IdInvalidException("Tài khoản đã bị khóa!");
+            }
+            List<SimpleGrantedAuthority> authorities = Collections.singletonList(
+                    new SimpleGrantedAuthority(user.getRole().name())
+            );
+            Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, authorities);
+
+            var res = new ResLoginDTO();
+            res.setUserLogin(new ResLoginDTO.UserLogin(user.getId(), user.getEmail(), user.getFullname()));
+
+            String newAccessToken = this.securityUtil.createToken(authentication, res);
+            res.setAccessToken(newAccessToken);
+
+            String newRefreshToken = this.securityUtil.createRefreshToken(user.getEmail(), res);
+
+            ResponseCookie resCookies = ResponseCookie
+                    .from(REFRESH_TOKEN_COOKIE_NAME, newRefreshToken)
+                    .httpOnly(true)
+                    .secure(true)
+                    .path(REFRESH_TOKEN_ENDPOINT)
+                    .maxAge(Duration.ofSeconds(refreshTokenExpiration))
+                    .build();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, resCookies.toString())
+                    .body(res);
+
+        } catch (Exception e) {
+            throw new IdInvalidException("Refresh Token không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại!");
         }
     }
 }
