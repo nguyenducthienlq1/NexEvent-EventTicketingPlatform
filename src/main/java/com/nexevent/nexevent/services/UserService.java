@@ -8,6 +8,7 @@ import com.nexevent.nexevent.utils.SecurityUtil;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -16,16 +17,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final SecurityUtil securityUtil;
     public  UserService( UserRepository userRepository,
-                        PasswordEncoder passwordEncoder,
-                         AuthenticationManagerBuilder authenticationManagerBuilder,
-                         SecurityUtil securityUtil) {
+                        PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
-        this.securityUtil = securityUtil;
     }
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
@@ -33,6 +28,7 @@ public class UserService {
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+    @Transactional
     public User createUser(RegisterDTO loginDTO) {
         User user = User.builder()
                 .email(loginDTO.getEmail())

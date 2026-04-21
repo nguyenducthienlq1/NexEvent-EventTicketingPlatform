@@ -1,5 +1,4 @@
 package com.nexevent.nexevent.domains.dto.request;
-import com.nexevent.nexevent.domains.enums.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +7,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Locale;
 @Getter
 @Setter
 public class RegisterDTO {
@@ -33,6 +31,6 @@ public class RegisterDTO {
     @Schema(example = "0965620068")
     private String phone;
 
-    @Schema(description = "Nhập vào vai trò của tài khoản, chỉ được ADMIN, CHECKER hoặc USER", example = "USER")
-    private Role role;
+//    @Schema(description = "Nhập vào vai trò của tài khoản, chỉ được ADMIN, CHECKER hoặc USER", example = "USER")
+//    private Role role;
 }
