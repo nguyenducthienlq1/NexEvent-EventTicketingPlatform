@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private long id;
+    private String id;
 
     @Column(name = "email", unique = true, nullable = false, length = 100)
     private String email;
@@ -27,7 +27,11 @@ public class User {
     private String password;
 
     @Column(name = "full_name", nullable = false, length = 100)
-    private String fullName;
+    private String fullname;
+
+    @Column(name = "phone", nullable = false, length = 11)
+    private String phone;
+
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
