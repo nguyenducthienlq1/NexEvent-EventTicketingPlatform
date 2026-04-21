@@ -18,8 +18,8 @@ public class RegisterDTO {
 
     @NotBlank(message = "Khong duoc de trong password")
     @Size(min = 8, message = "Mat khau qua ngan, it nhat 8 ki tu tro len")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).*$",
-            message = "password phai co chu so, chu thuong va chu hoa")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#\\$%\\^&\\*]{8,}$",
+            message = "Password phải có ít nhất 8 ký tự, bao gồm chữ số, chữ thường, chữ hoa và không chứa khoảng trắng hoặc ký tự đặc biệt không cho phép")
     @Schema(example = "Ducthienlq1")
     private String password;
 

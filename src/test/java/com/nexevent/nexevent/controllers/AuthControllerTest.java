@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -103,11 +104,12 @@ public class AuthControllerTest extends BaseIntegrationTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-            "short",           // Case 1: Quá ngắn (< 8 ký tự)
-            "alllowercase123", // Case 2: Thiếu chữ hoa
-            "ALLUPPERCASE123", // Case 3: Thiếu chữ thường
-            "NoNumberHere!!",  // Case 4: Thiếu chữ số
-            "  "              // Case 5: Bỏ trống hoặc chỉ có dấu cách
+            "short",           // Quá ngắn (< 8 ký tự)
+            "alllowercase123", // Không có chữ hoa
+            "ALLUPPERCASE123", // Không có chữ thường
+            "NoNumberHere!!",  // Không có số
+            "Thien 123!@#",    // Chứa khoảng trắng
+            "Thien123😊😊"       // Chứa Icon/Emoji
     })
     @DisplayName("Đăng ký thất bại: Password vi phạm các quy tắc bảo mật")
     void testRegister_Fail_InvalidPassword(String invalidPassword) throws Exception {
@@ -120,6 +122,28 @@ public class AuthControllerTest extends BaseIntegrationTest {
         mockMvc.perform(post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "khong-phai-email, Thien123!@#, Nguyen Duc Thien, 0965620068", // Sai định dạng email
+            "test@gmail.com, Thien123!@#, '', 0965620068",                 // Bỏ trống Fullname
+            "test@gmail.com, Thien123!@#, Nguyen Duc Thien, ''"            // Bỏ trống Số điện thoại
+    })
+    @DisplayName("Đăng ký thất bại: Bỏ trống trường dữ liệu hoặc sai định dạng Email")
+    void testRegister_Fail_Validation(String email, String password, String fullname, String phone) throws Exception {
+
+        RegisterDTO registerDTO = new RegisterDTO();
+        registerDTO.setEmail(email);
+        registerDTO.setPassword(password);
+        registerDTO.setFullname(fullname);
+        registerDTO.setPhone(phone);
+
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(registerDTO)))
+                // Kỳ vọng lỗi 400 Bad Request
                 .andExpect(status().isBadRequest());
     }
 
@@ -190,4 +214,41 @@ public class AuthControllerTest extends BaseIntegrationTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    @DisplayName("Đăng nhập thất bại: Báo lỗi 400 nếu Email chưa được đăng ký")
+    void testLogin_Fail_EmailNotFound() throws Exception {
+
+        LoginDTO loginDTO = new LoginDTO();
+        loginDTO.setEmail("not.exist@gmail.com");
+        loginDTO.setPassword("SomePass123!");
+
+        // Act & Assert
+        mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Đăng nhập thất bại: Báo lỗi 400 nếu Tài khoản đang bị khóa (isActive = false)")
+    void testLogin_Fail_AccountLocked() throws Exception {
+        User lockedUser = new User();
+        lockedUser.setEmail("locked@gmail.com");
+        lockedUser.setPassword(passwordEncoder.encode("ValidPass123!"));
+        lockedUser.setFullname("Locked User");
+        lockedUser.setPhone("0111222333");
+        lockedUser.setActive(false);
+        userRepository.save(lockedUser);
+
+        LoginDTO loginDTO = new LoginDTO();
+        loginDTO.setEmail("locked@gmail.com");
+        loginDTO.setPassword("ValidPass123!");
+
+        // 2. Act & Assert
+        mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginDTO)))
+                // Dù pass đúng, nhưng bị khóa thì vẫn phải trả về 400
+                .andExpect(status().isBadRequest());
+    }
 }
