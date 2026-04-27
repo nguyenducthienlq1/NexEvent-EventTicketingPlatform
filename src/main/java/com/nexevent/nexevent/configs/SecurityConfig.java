@@ -4,6 +4,11 @@ import com.nexevent.nexevent.utils.CustomAccessDeniedHandler;
 import com.nexevent.nexevent.utils.SecurityUtil;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.util.Base64;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -97,5 +102,32 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
+    }
+    @Bean
+    public OpenAPI customOpenAPI() {
+        // Tên định danh cho cấu hình bảo mật
+        final String securitySchemeName = "bearerAuth";
+
+        return new OpenAPI()
+                // Cấu hình tiêu đề cho trang Swagger
+                .info(new Info()
+                        .title("NexEvent API Documentation")
+                        .version("1.0")
+                        .description("Tài liệu API cho hệ thống bán vé sự kiện NexEvent"))
+
+                // Áp dụng bảo mật này cho TOÀN BỘ các API (hiện ổ khóa)
+                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+
+                // Cấu hình chi tiết loại bảo mật là JWT Bearer
+                .components(
+                        new Components()
+                                .addSecuritySchemes(securitySchemeName,
+                                        new SecurityScheme()
+                                                .name(securitySchemeName)
+                                                .type(SecurityScheme.Type.HTTP)
+                                                .scheme("bearer")
+                                                .bearerFormat("JWT")
+                                )
+                );
     }
 }

@@ -1,11 +1,11 @@
 package com.nexevent.nexevent.services;
 
+import com.nexevent.nexevent.domains.dto.request.ChangePasswordDTO;
 import com.nexevent.nexevent.domains.dto.request.RegisterDTO;
 import com.nexevent.nexevent.domains.entities.User;
 import com.nexevent.nexevent.domains.enums.Role;
 import com.nexevent.nexevent.repositories.UserRepository;
-import com.nexevent.nexevent.utils.SecurityUtil;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,5 +41,27 @@ public class UserService {
 
         this.userRepository.save(user);
         return user;
+    }
+    public boolean changePassword(ChangePasswordDTO changePasswordDTO, String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+
+        // 1. Kiểm tra User tồn tại
+        if (userOpt.isEmpty()) {
+            return false;
+        }
+
+        User user = userOpt.get();
+
+        if (passwordEncoder.matches(changePasswordDTO.getOldPassword(), user.getPassword())) {
+            if (changePasswordDTO.getNewPassword().equals(changePasswordDTO.getConfirmPassword())) {
+                user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+                userRepository.save(user);
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
     }
 }

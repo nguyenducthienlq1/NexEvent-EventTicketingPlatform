@@ -3,6 +3,7 @@ package com.nexevent.nexevent.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexevent.nexevent.BaseIntegrationTest;
+import com.nexevent.nexevent.domains.dto.request.ChangePasswordDTO;
 import com.nexevent.nexevent.domains.dto.request.LoginDTO;
 import com.nexevent.nexevent.domains.dto.request.RegisterDTO;
 import com.nexevent.nexevent.domains.entities.User;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.security.test.context.support.WithMockUser;
 
 // Kế thừa BaseIntegrationTest để tự động gọi PostgreSQL từ Docker lên
 public class AuthControllerTest extends BaseIntegrationTest {
@@ -249,6 +251,112 @@ public class AuthControllerTest extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginDTO)))
                 // Dù pass đúng, nhưng bị khóa thì vẫn phải trả về 400
+                .andExpect(status().isBadRequest());
+    }
+
+    // ==========================================
+    // 3. CÁC KỊCH BẢN TEST CHO LUỒNG ĐỔI MẬT KHẨU
+    // ==========================================
+
+    @Test
+    @DisplayName("Đổi mật khẩu thành công: Trả về 200 OK")
+    // BÍ KÍP Ở ĐÂY: Giả lập một user đang đăng nhập có email là changepass@gmail.com
+    @WithMockUser(username = "changepass@gmail.com")
+    void testChangePassword_Success() throws Exception {
+        // 1. Arrange: Mồi data user vào DB ảo
+        User validUser = new User();
+        validUser.setEmail("changepass@gmail.com"); // Email DB phải KHỚP với email ở @WithMockUser
+        validUser.setPassword(passwordEncoder.encode("OldPass123!"));
+        validUser.setFullname("Test Change Pass");
+        validUser.setPhone("0987654321");
+        validUser.setActive(true);
+        userRepository.save(validUser);
+
+        // Chuẩn bị DTO đổi mật khẩu
+        ChangePasswordDTO dto = new ChangePasswordDTO();
+        dto.setOldPassword("OldPass123!");
+        dto.setNewPassword("NewPass123!@#");
+        dto.setConfirmPassword("NewPass123!@#");
+
+        // 2. Act & 3. Assert
+        mockMvc.perform(post("/api/v1/auth/password/change")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+
+                // Kỳ vọng đổi thành công
+                .andExpect(status().isOk())
+
+                // Kỳ vọng câu thông báo trả về khớp với code
+                .andExpect(content().string("Password Changed Successfully!"));
+
+        // 4. Assert Data (Tuyệt chiêu của Tester QA):
+        // Lôi cái thằng user đó từ DB lên xem mật khẩu mới đã thực sự được băm và lưu đè lên chưa!
+        User updatedUser = userRepository.findByEmail("changepass@gmail.com").get();
+        boolean isNewPasswordSaved = passwordEncoder.matches("NewPass123!@#", updatedUser.getPassword());
+        assertTrue(isNewPasswordSaved, "Lỗi: Mật khẩu mới chưa được lưu xuống Database!");
+    }
+
+    @Test
+    @DisplayName("Đổi mật khẩu thất bại: Sai mật khẩu cũ trả về 400")
+    @WithMockUser(username = "wrongoldpass@gmail.com")
+    void testChangePassword_Fail_WrongOldPassword() throws Exception {
+        // 1. Arrange
+        User validUser = new User();
+        validUser.setEmail("wrongoldpass@gmail.com");
+        validUser.setPassword(passwordEncoder.encode("OldPass123!"));
+        validUser.setFullname("Test User");
+        validUser.setPhone("0123456789");
+        validUser.setActive(true);
+        userRepository.save(validUser);
+
+        ChangePasswordDTO dto = new ChangePasswordDTO();
+        dto.setOldPassword("SaiPassCuRoi!"); // CỐ TÌNH NHẬP SAI PASS CŨ
+        dto.setNewPassword("NewPass123!@#");
+        dto.setConfirmPassword("NewPass123!@#");
+
+        // 2. Act & Assert
+        mockMvc.perform(post("/api/v1/auth/password/change")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+
+                // Kỳ vọng API phải chặn lại
+                .andExpect(status().isBadRequest());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "SaiPassCu123!, NewPass123!@#, NewPass123!@#",
+
+            "OldPass123!, NewPass123!@#, XacNhanSai123!",
+
+            "OldPass123!, yeu, yeu",
+
+            "OldPass123!, '', ''"
+    })
+    @DisplayName("Đổi mật khẩu thất bại: Trả về 400 (Sai pass cũ, Không khớp pass xác nhận, Dữ liệu yếu)")
+    @WithMockUser(username = "badrequest@gmail.com")
+    void testChangePassword_Fail_BadRequests(String inputOldPass, String inputNewPass, String inputConfirmPass) throws Exception {
+
+        // 1. Arrange: Mồi user chuẩn vào DB (Mật khẩu thật là OldPass123!)
+        User validUser = new User();
+        validUser.setEmail("badrequest@gmail.com");
+        validUser.setPassword(passwordEncoder.encode("OldPass123!"));
+        validUser.setFullname("Test User");
+        validUser.setPhone("0123456789");
+        validUser.setActive(true);
+        userRepository.save(validUser);
+
+        // Gán dữ liệu tồi tệ từ CsvSource vào DTO
+        ChangePasswordDTO dto = new ChangePasswordDTO();
+        dto.setOldPassword(inputOldPass);
+        dto.setNewPassword(inputNewPass);
+        dto.setConfirmPassword(inputConfirmPass);
+
+        // 2. Act & Assert: Bắn API và chắc chắn nó phải văng lỗi 400
+        mockMvc.perform(post("/api/v1/auth/password/change")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+
                 .andExpect(status().isBadRequest());
     }
 }
