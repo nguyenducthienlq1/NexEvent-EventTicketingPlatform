@@ -1,6 +1,7 @@
 package com.nexevent.nexevent.controllers;
 
 
+import com.nexevent.nexevent.domains.dto.request.ChangePasswordDTO;
 import com.nexevent.nexevent.domains.dto.request.LoginDTO;
 import com.nexevent.nexevent.domains.dto.request.RegisterDTO;
 import com.nexevent.nexevent.domains.dto.request.ResLoginDTO;
@@ -32,7 +33,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("${nexevent.api-prefix}/auth")
@@ -123,6 +123,21 @@ public class AuthController {
             throw new IdInvalidException("Email hoặc mật khẩu không chính xác!");
         }
     }
+    @PostMapping("/password/change")
+    @ApiMessage("Đổi mật khẩu thành công")
+    @Operation(summary = "Change password", description = "Đổi mật khẩu mới (Quên mật khẩu)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Đổi mật khẩu thành công"),
+            @ApiResponse(responseCode = "400", description = "Dữ liệu không hợp lệ (Ví dụ: Mật khẩu mới quá yếu, mã xác nhận/Token bị sai hoặc đã hết hạn)"),
+    })
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO){
+        String email = SecurityUtil.getCurrentUserEmail();
+        if (userService.changePassword(changePasswordDTO, email)){
+            return ResponseEntity.ok().body("Password Changed Successfully!");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
     @PostMapping("/refresh")
     @ApiMessage("Làm mới token thành công")
     @Operation(summary = "Refresh access token", description = "Cấp lại Access Token mới dựa vào Refresh Token đính kèm trong Cookie")
