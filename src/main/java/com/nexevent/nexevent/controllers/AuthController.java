@@ -1,10 +1,7 @@
 package com.nexevent.nexevent.controllers;
 
 
-import com.nexevent.nexevent.domains.dto.request.ChangePasswordDTO;
-import com.nexevent.nexevent.domains.dto.request.LoginDTO;
-import com.nexevent.nexevent.domains.dto.request.RegisterDTO;
-import com.nexevent.nexevent.domains.dto.request.ResLoginDTO;
+import com.nexevent.nexevent.domains.dto.request.*;
 import com.nexevent.nexevent.domains.entities.User;
 import com.nexevent.nexevent.services.UserService;
 import com.nexevent.nexevent.utils.ApiMessage;
@@ -73,7 +70,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
     @PostMapping("/login")
-    @ApiMessage("Login Account")
+    @ApiMessage("Đăng nhập thành công")
     @Operation(summary = "Authenticate user", description = "Logs in the user. Returns an Access Token")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Login successful or 2FA required"),
@@ -188,5 +185,28 @@ public class AuthController {
         } catch (Exception e) {
             throw new IdInvalidException("Refresh Token không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại!");
         }
+    }
+    @PostMapping("/password/forgot-password")
+    @ApiMessage("Yêu cầu gửi OTP thành công")
+    @Operation(summary = "Forgot password", description = "Gửi mã OTP 6 số về email của người dùng")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mã OTP đã được gửi thành công"),
+            @ApiResponse(responseCode = "400", description = "Email không hợp lệ hoặc không tồn tại trong hệ thống")
+    })
+    public ResponseEntity<String> forgotPassword(@Valid @RequestBody ForgotPasswordReqDTO dto) throws IdInvalidException {
+        userService.processForgotPassword(dto.getEmail());
+        return ResponseEntity.ok().body("Mã OTP đã được gửi đến email của bạn.");
+    }
+
+    @PostMapping("/password/reset-password")
+    @ApiMessage("Đặt lại mật khẩu thành công")
+    @Operation(summary = "Reset password", description = "Xác nhận OTP và tiến hành đặt lại mật khẩu mới")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mật khẩu được đổi thành công"),
+            @ApiResponse(responseCode = "400", description = "OTP sai, hết hạn, hoặc nhập sai quá nhiều lần")
+    })
+    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordReqDTO dto) throws IdInvalidException {
+        userService.processResetPassword(dto);
+        return ResponseEntity.ok().body("Đặt lại mật khẩu thành công! Vui lòng đăng nhập lại.");
     }
 }

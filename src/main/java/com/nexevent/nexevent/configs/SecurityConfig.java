@@ -90,7 +90,8 @@ public class SecurityConfig {
                                         "/api/v1/auth/refresh",
                                         "/v3/api-docs/**",
                                         "/swagger-ui/**",
-                                        "/swagger-ui.html").permitAll()
+                                        "/swagger-ui.html",
+                                        "/api/v1/auth/password/**").permitAll()
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2 -> oauth2.jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(this.customAuthenticationEntryPoint)))
