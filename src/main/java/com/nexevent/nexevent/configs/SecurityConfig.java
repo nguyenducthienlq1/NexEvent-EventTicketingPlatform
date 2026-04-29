@@ -12,6 +12,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -58,12 +59,10 @@ public class SecurityConfig {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new
                 JwtGrantedAuthoritiesConverter();
         grantedAuthoritiesConverter.setAuthorityPrefix("");
-        //set quyen han co ten la permission vao context
         grantedAuthoritiesConverter.setAuthoritiesClaimName("permission");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new
                 JwtAuthenticationConverter();
-
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
@@ -92,6 +91,7 @@ public class SecurityConfig {
                                         "/swagger-ui/**",
                                         "/swagger-ui.html",
                                         "/api/v1/auth/password/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/events/**").permitAll()
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2 -> oauth2.jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(this.customAuthenticationEntryPoint)))
@@ -106,9 +106,7 @@ public class SecurityConfig {
     }
     @Bean
     public OpenAPI customOpenAPI() {
-        // Tên định danh cho cấu hình bảo mật
         final String securitySchemeName = "bearerAuth";
-
         return new OpenAPI()
                 // Cấu hình tiêu đề cho trang Swagger
                 .info(new Info()
@@ -116,10 +114,7 @@ public class SecurityConfig {
                         .version("1.0")
                         .description("Tài liệu API cho hệ thống bán vé sự kiện NexEvent"))
 
-                // Áp dụng bảo mật này cho TOÀN BỘ các API (hiện ổ khóa)
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
-
-                // Cấu hình chi tiết loại bảo mật là JWT Bearer
                 .components(
                         new Components()
                                 .addSecuritySchemes(securitySchemeName,
