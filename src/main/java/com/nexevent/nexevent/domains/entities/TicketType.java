@@ -26,6 +26,9 @@ public class TicketType {
     @Column(name = "title", nullable = false)
     private String title;
 
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
@@ -42,5 +45,6 @@ public class TicketType {
     private LocalDateTime endTime;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private StatusTicket status;
 }

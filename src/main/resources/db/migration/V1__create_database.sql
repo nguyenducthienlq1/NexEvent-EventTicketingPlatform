@@ -32,7 +32,7 @@ CREATE TABLE ticket_types (
                               price numeric(38,2) not null,
                               total_quantity integer not null,
                               sold_quantity integer,
-                              status smallint check ((status between 0 and 1)),
+                              status varchar(50) not null,
                               start_time timestamp(6),
                               end_time timestamp(6),
                               event_id bigint not null,
