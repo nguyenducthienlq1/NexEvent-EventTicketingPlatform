@@ -43,7 +43,7 @@ public class TicketTypeService {
                 .soldQuantity(0)
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
-                .status(StatusTicket.AVAILABE)
+                .status(StatusTicket.AVAILABLE)
                 .build();
 
         ticketTypeRepository.save(newTicket);
@@ -66,7 +66,7 @@ public class TicketTypeService {
         ticket.setEndTime(dto.getEndTime());
 
         if (ticket.getStatus() == StatusTicket.SOLD_OUT && ticket.getTotalQuantity() > ticket.getSoldQuantity()) {
-            ticket.setStatus(StatusTicket.AVAILABE);
+            ticket.setStatus(StatusTicket.AVAILABLE);
         }
 
         ticketTypeRepository.save(ticket);
@@ -88,7 +88,7 @@ public class TicketTypeService {
 
 
     public Page<TicketTypeResDTO> getActiveTicketsByEvent(Long eventId, Pageable pageable) {
-        return ticketTypeRepository.findByEventIdAndStatus(eventId, StatusTicket.AVAILABE, pageable)
+        return ticketTypeRepository.findByEventIdAndStatus(eventId, StatusTicket.AVAILABLE, pageable)
                 .map(this::convertToResDTO);
     }
 

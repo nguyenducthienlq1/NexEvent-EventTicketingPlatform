@@ -1,6 +1,7 @@
 package com.nexevent.nexevent.domains.entities;
 
 
+import com.nexevent.nexevent.domains.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,7 +32,8 @@ public class Order {
     private BigDecimal totalAmount;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

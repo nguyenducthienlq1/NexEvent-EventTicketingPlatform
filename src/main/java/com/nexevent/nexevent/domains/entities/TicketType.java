@@ -47,4 +47,7 @@ public class TicketType {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private StatusTicket status;
+
+    @Version
+    private Long version;
 }

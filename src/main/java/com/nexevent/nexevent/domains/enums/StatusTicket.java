@@ -1,7 +1,7 @@
 package com.nexevent.nexevent.domains.enums;
 
 public enum StatusTicket {
-    AVAILABE,
+    AVAILABLE,
     SOLD_OUT,
     UNAVAILABE
 }
