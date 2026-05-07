@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,97 +60,112 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(OrderReqDTO dto, String userEmail) throws IdInvalidException {
+    public Order createOrder(OrderReqDTO dto, String userEmail) {
         //Lấy thông tin người dùng
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IdInvalidException("Người dùng không tồn tại"));
-        //Bắt buộc thanh toán Order trước khi tạo Order mới
-        if (orderRepository.existsByUserAndStatus(user, OrderStatus.PENDING)) {
-            throw new IdInvalidException("Bạn đang có một đơn hàng chưa thanh toán! Vui lòng hoàn tất thanh toán hoặc hủy đơn cũ trước khi đặt vé mới.");
+
+        // Dùng Redis khóa request spam, lỡ bấm nhanh quá
+        String lockKey = "lock:create_order:" + user.getId();
+        Boolean isLocked = redisTemplate.opsForValue().setIfAbsent(lockKey, "locked", 5, TimeUnit.SECONDS);
+        if (Boolean.FALSE.equals(isLocked)) {
+            throw new IdInvalidException("Bạn thao tác quá nhanh! Vui lòng chờ vài giây.");
         }
-        //Chỉ cho phép mua số lượng vé giới hạn trong 1 lần Order
-        int totalTicket = dto.getItems().stream()
-                .mapToInt(OrderItemReqDTO::getQuantity)
-                .sum();
-        if (totalTicket > maxTicketPerOrder) {
-            throw new IdInvalidException("Giới hạn mua quá mức! Bạn chỉ được mua tối đa " + maxTicketPerOrder + " vé trong một đơn hàng.");
-        }
-
-        // ==========================================
-        // BƯỚC TỐI ƯU 1: CHỐNG HACKER GỬI TRÙNG ID VÉ
-        // Gom nhóm: Nếu FE gửi [{id:1, qty:2}, {id:1, qty:3}], tự động gộp thành {id:1, qty:5}
-        // ==========================================
-        Map<Long, Integer> ticketQuantityMap = dto.getItems().stream()
-                .collect(Collectors.groupingBy(
-                        OrderItemReqDTO::getTicketTypeId,
-                        Collectors.summingInt(OrderItemReqDTO::getQuantity)
-                ));
-
-        // ==========================================
-        // BƯỚC TỐI ƯU 2: GIẢI QUYẾT N+1 QUERY
-        // Lấy tất cả vé từ DB chỉ bằng 1 câu query (SELECT * FROM ticket_types WHERE id IN (...))
-        // ==========================================
-        List<TicketType> ticketTypes = ticketTypeRepository.findAllById(ticketQuantityMap.keySet());
-
-        // Nếu số lượng vé lấy lên không bằng số lượng ID khách truyền -> Có vé giả mạo
-        if (ticketTypes.size() != ticketQuantityMap.size()) {
-            throw new IdInvalidException("Một số loại vé không tồn tại trong hệ thống!");
-        }
-
-        // Ép List sang Map để chốc nữa Get ra cho nhanh (Độ phức tạp O(1))
-        Map<Long, TicketType> ticketTypeMap = ticketTypes.stream()
-                .collect(Collectors.toMap(TicketType::getId, t -> t));
-
-        Order newOrder = Order.builder()
-                .user(user)
-                .orderCode(generateOrderCode())
-                .totalAmount(BigDecimal.ZERO)
-                .status(OrderStatus.PENDING)
-                .build();
-        newOrder = orderRepository.save(newOrder);
-
-        BigDecimal totalOrderAmount = BigDecimal.ZERO;
-        List<OrderItem> orderItems = new ArrayList<>();
-
-        for (Map.Entry<Long, Integer> entry : ticketQuantityMap.entrySet()) {
-            Long ticketId = entry.getKey();
-            Integer quantityToBuy = entry.getValue();
-            TicketType ticketType = ticketTypeMap.get(ticketId);
-
-            // Kiểm tra trạng thái
-            if (ticketType.getStatus() != StatusTicket.AVAILABLE) {
-                throw new IdInvalidException("Vé '" + ticketType.getTitle() + "' hiện không mở bán.");
+        try {
+            // Bắt buộc thanh toán Order trước khi tạo Order mới
+            if (orderRepository.existsByUserAndStatus(user, OrderStatus.PENDING)) {
+                throw new IdInvalidException("Bạn đang có một đơn hàng chưa thanh toán! Vui lòng hoàn tất hoặc hủy đơn cũ.");
             }
 
-            // Kiểm tra số lượng tồn
-            int remainQty = ticketType.getTotalQuantity() - ticketType.getSoldQuantity();
-            if (remainQty < quantityToBuy) {
-                throw new IdInvalidException("Vé '" + ticketType.getTitle() + "' chỉ còn " + remainQty + " vé, không đủ số lượng!");
+            // Chỉ cho phép mua số lượng vé giới hạn
+            int totalTicket = dto.getItems().stream().mapToInt(OrderItemReqDTO::getQuantity).sum();
+            if (totalTicket > maxTicketPerOrder) { // Lưu ý tên biến maxTicketsPerOrder
+                throw new IdInvalidException("Giới hạn mua quá mức! Bạn chỉ được mua tối đa " + maxTicketPerOrder + " vé.");
             }
 
-            // Tính tiền
-            BigDecimal itemSubtotal = ticketType.getPrice().multiply(BigDecimal.valueOf(quantityToBuy));
-            totalOrderAmount = totalOrderAmount.add(itemSubtotal);
+            // Gom nhóm tránh Hacker gửi trùng ID vé
+            Map<Long, Integer> ticketQuantityMap = dto.getItems().stream()
+                    .collect(Collectors.groupingBy(
+                            OrderItemReqDTO::getTicketTypeId,
+                            Collectors.summingInt(OrderItemReqDTO::getQuantity)
+                    ));
 
-            // CẬP NHẬT DỮ LIỆU BỘ NHỚ (Không cần gọi .save() nhờ Dirty Checking)
-            ticketType.setSoldQuantity(ticketType.getSoldQuantity() + quantityToBuy);
-            if (ticketType.getSoldQuantity().equals(ticketType.getTotalQuantity())) {
-                ticketType.setStatus(StatusTicket.SOLD_OUT);
+            // Lấy các loại vé (TicketType)
+            List<TicketType> ticketTypes = ticketTypeRepository.findTicketsWithEventByIds(ticketQuantityMap.keySet());
+            if (ticketTypes.size() != ticketQuantityMap.size()) {
+                throw new IdInvalidException("Một số loại vé không tồn tại trong hệ thống!");
             }
 
-            // Tạo Order Item
-            OrderItem orderItem = OrderItem.builder()
-                    .order(newOrder)
-                    .ticketType(ticketType)
-                    .quantity(quantityToBuy)
-                    .unitPrice(ticketType.getPrice())
-                    .subtotal(itemSubtotal)
+            Map<Long, TicketType> ticketTypeMap = ticketTypes.stream()
+                    .collect(Collectors.toMap(TicketType::getId, t -> t));
+
+            Order newOrder = Order.builder()
+                    .user(user)
+                    .orderCode(generateOrderCode())
+                    .totalAmount(BigDecimal.ZERO)
+                    .status(OrderStatus.PENDING)
                     .build();
-            orderItems.add(orderItem);
-        }
+            newOrder = orderRepository.save(newOrder);
 
-        orderItemRepository.saveAll(orderItems);
-        newOrder.setTotalAmount(totalOrderAmount);
-        return newOrder;
+            BigDecimal totalOrderAmount = BigDecimal.ZERO;
+            List<OrderItem> orderItems = new ArrayList<>();
+            LocalDateTime now = LocalDateTime.now();
+
+            for (Map.Entry<Long, Integer> entry : ticketQuantityMap.entrySet()) {
+                Long ticketId = entry.getKey();
+                Integer quantityToBuy = entry.getValue();
+                TicketType ticketType = ticketTypeMap.get(ticketId);
+
+                if (ticketType.getStatus() != StatusTicket.AVAILABLE) {
+                    throw new IdInvalidException("Vé '" + ticketType.getTitle() + "' hiện không mở bán.");
+                }
+
+                if (ticketType.getStartTime() != null && now.isBefore(ticketType.getStartTime())) {
+                    throw new IdInvalidException("Vé '" + ticketType.getTitle() + "' chưa tới giờ mở bán!");
+                }
+
+                if (ticketType.getEndTime() != null && now.isAfter(ticketType.getEndTime())) {
+                    throw new IdInvalidException("Vé '" + ticketType.getTitle() + "' đã kết thúc thời gian mở bán!");
+                }
+
+                if (ticketType.getEvent() == null || !ticketType.getEvent().isActive()) { // Chú ý hàm isActive()
+                    throw new IdInvalidException("Sự kiện của loại vé này đã bị hủy hoặc ngừng hoạt động!");
+                }
+
+                // Tính toán số lượng vé còn lại
+                int currentSold = ticketType.getSoldQuantity() == null ? 0 : ticketType.getSoldQuantity();
+                int remainQty = ticketType.getTotalQuantity() - currentSold;
+
+                if (remainQty < quantityToBuy) {
+                    throw new IdInvalidException("Vé '" + ticketType.getTitle() + "' chỉ còn " + remainQty + " vé!");
+                }
+
+                BigDecimal itemSubtotal = ticketType.getPrice().multiply(BigDecimal.valueOf(quantityToBuy));
+                totalOrderAmount = totalOrderAmount.add(itemSubtotal);
+
+                // Cập nhật số lượng vé
+                ticketType.setSoldQuantity(currentSold + quantityToBuy);
+                if (ticketType.getSoldQuantity().equals(ticketType.getTotalQuantity())) {
+                    ticketType.setStatus(StatusTicket.SOLD_OUT);
+                }
+
+                OrderItem orderItem = OrderItem.builder()
+                        .order(newOrder)
+                        .ticketType(ticketType)
+                        .quantity(quantityToBuy)
+                        .unitPrice(ticketType.getPrice())
+                        .subtotal(itemSubtotal)
+                        .build();
+                orderItems.add(orderItem);
+            }
+
+            orderItemRepository.saveAll(orderItems);
+            newOrder.setTotalAmount(totalOrderAmount);
+            return newOrder;
+
+        } finally {
+            // Mở khóa Redis ngay lập tức sau khi chạy xong (dù thành công hay thất bại)
+            redisTemplate.delete(lockKey);
+        }
     }
 }

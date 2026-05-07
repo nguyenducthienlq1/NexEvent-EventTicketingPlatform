@@ -79,7 +79,7 @@ public class UserService {
     private static final long OTP_EXPIRATION_MINUTES = 5;
     private static final int MAX_OTP_ATTEMPTS = 5;
 
-    public void processForgotPassword(String email) throws IdInvalidException {
+    public void processForgotPassword(String email) {
         userRepository.findByEmail(email)
                 .orElseThrow(() -> new IdInvalidException("Không tìm thấy tài khoản với Email này!"));
         String otp = String.format("%06d", new SecureRandom().nextInt(999999));
@@ -93,7 +93,7 @@ public class UserService {
     }
 
     @Transactional
-    public void processResetPassword(ResetPasswordReqDTO dto) throws IdInvalidException {
+    public void processResetPassword(ResetPasswordReqDTO dto)  {
         // 1. Check xác nhận mật khẩu
         if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
             throw new IdInvalidException("Mật khẩu xác nhận không trùng khớp!");

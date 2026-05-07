@@ -26,7 +26,7 @@ public class TicketTypeService {
         this.eventRepository = eventRepository;
     }
 
-    public TicketTypeResDTO createTicketType(TicketTypeReqDTO dto) throws IdInvalidException {
+    public TicketTypeResDTO createTicketType(TicketTypeReqDTO dto){
         if (dto.getStartTime().isAfter(dto.getEndTime())) {
             throw new IdInvalidException("Thời gian mở bán không thể sau thời gian đóng bán!");
         }
@@ -50,7 +50,7 @@ public class TicketTypeService {
         return convertToResDTO(newTicket);
     }
 
-    public TicketTypeResDTO updateTicketType(Long id, TicketTypeReqDTO dto) throws IdInvalidException {
+    public TicketTypeResDTO updateTicketType(Long id, TicketTypeReqDTO dto){
         TicketType ticket = ticketTypeRepository.findById(id)
                 .orElseThrow(() -> new IdInvalidException("Không tìm thấy loại vé ID: " + id));
 
@@ -73,7 +73,7 @@ public class TicketTypeService {
         return convertToResDTO(ticket);
     }
 
-    public void deleteTicketType(Long id) throws IdInvalidException {
+    public void deleteTicketType(Long id) {
         TicketType ticket = ticketTypeRepository.findById(id)
                 .orElseThrow(() -> new IdInvalidException("Không tìm thấy loại vé ID: " + id));
 

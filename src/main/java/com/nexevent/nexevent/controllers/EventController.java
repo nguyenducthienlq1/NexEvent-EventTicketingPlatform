@@ -5,7 +5,6 @@ import com.nexevent.nexevent.domains.dto.response.EventResDTO;
 import com.nexevent.nexevent.services.EventService;
 import com.nexevent.nexevent.utils.ApiMessage;
 import com.nexevent.nexevent.utils.SecurityUtil;
-import com.nexevent.nexevent.utils.exception.IdInvalidException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -56,7 +55,7 @@ public class EventController {
     @GetMapping("/{id}")
     @ApiMessage("Lấy chi tiết sự kiện thành công")
     @Operation(summary = "Lấy chi tiết 1 sự kiện", description = "Xem chi tiết thông tin của 1 sự kiện bằng ID")
-    public ResponseEntity<EventResDTO> getEventById(@PathVariable Long id) throws IdInvalidException {
+    public ResponseEntity<EventResDTO> getEventById(@PathVariable Long id) {
         return ResponseEntity.ok().body(eventService.getEventById(id));
     }
 
@@ -69,7 +68,7 @@ public class EventController {
             @ApiResponse(responseCode = "400", description = "Dữ liệu không hợp lệ (thời gian sai, thiếu field)"),
             @ApiResponse(responseCode = "403", description = "Không có quyền truy cập (Không phải Admin)")
     })
-    public ResponseEntity<EventResDTO> createEvent(@Valid @RequestBody EventReqDTO dto) throws IdInvalidException {
+    public ResponseEntity<EventResDTO> createEvent(@Valid @RequestBody EventReqDTO dto)  {
         String currentUserEmail = SecurityUtil.getCurrentUserEmail();
         EventResDTO res = eventService.createEvent(dto, currentUserEmail);
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
@@ -81,7 +80,7 @@ public class EventController {
     @Operation(summary = "Cập nhật sự kiện (ADMIN)", description = "Chỉnh sửa thông tin sự kiện")
     public ResponseEntity<EventResDTO> updateEvent(
             @PathVariable Long id,
-            @Valid @RequestBody EventReqDTO dto) throws IdInvalidException {
+            @Valid @RequestBody EventReqDTO dto)  {
 
         EventResDTO res = eventService.updateEvent(id, dto);
         return ResponseEntity.ok().body(res);
@@ -91,7 +90,7 @@ public class EventController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @ApiMessage("Xóa sự kiện thành công")
     @Operation(summary = "Xóa sự kiện (ADMIN)", description = "Hủy (Soft-delete) một sự kiện khỏi hệ thống")
-    public ResponseEntity<Void> deleteEvent(@PathVariable Long id) throws IdInvalidException {
+    public ResponseEntity<Void> deleteEvent(@PathVariable Long id)  {
         eventService.deleteEvent(id);
         return ResponseEntity.ok().build();
     }

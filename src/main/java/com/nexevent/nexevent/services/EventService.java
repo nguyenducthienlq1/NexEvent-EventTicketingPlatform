@@ -21,7 +21,7 @@ public class EventService {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
     }
-    public EventResDTO createEvent(EventReqDTO dto, String adminEmail) throws IdInvalidException {
+    public EventResDTO createEvent(EventReqDTO dto, String adminEmail) {
         if (dto.getStartTime().isAfter(dto.getEndTime())) {
             throw new IdInvalidException("Thời gian bắt đầu không thể sau thời gian kết thúc!");
         }
@@ -42,7 +42,7 @@ public class EventService {
         eventRepository.save(newEvent);
         return convertToResDTO(newEvent);
     }
-    public EventResDTO updateEvent(Long eventId, EventReqDTO dto) throws IdInvalidException {
+    public EventResDTO updateEvent(Long eventId, EventReqDTO dto) {
         if (dto.getStartTime().isAfter(dto.getEndTime())) {
             throw new IdInvalidException("Thời gian bắt đầu không thể sau thời gian kết thúc!");
         }
@@ -61,7 +61,7 @@ public class EventService {
         return convertToResDTO(currentEvent);
     }
 
-    public void deleteEvent(Long eventId) throws IdInvalidException {
+    public void deleteEvent(Long eventId){
         Event currentEvent = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IdInvalidException("Không tìm thấy sự kiện với ID: " + eventId));
 
@@ -79,7 +79,7 @@ public class EventService {
                 .map(this::convertToResDTO);
     }
 
-    public EventResDTO getEventById(Long eventId) throws IdInvalidException {
+    public EventResDTO getEventById(Long eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IdInvalidException("Không tìm thấy sự kiện với ID: " + eventId));
 
