@@ -13,6 +13,7 @@ import com.nexevent.nexevent.repositories.OrderRepository;
 import com.nexevent.nexevent.repositories.TicketTypeRepository;
 import com.nexevent.nexevent.repositories.UserRepository;
 import com.nexevent.nexevent.utils.exception.IdInvalidException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +45,9 @@ public class OrderService {
         this.ticketTypeRepository = ticketTypeRepository;
         this.userRepository = userRepository;
     }
+    @Value("${nexevent.order.max-ticket-per-order}")
+    private int maxTicketPerOrder;
+
     private String generateOrderCode() {
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String redisKey = "nexevent:order_seq:" + currentDate;
@@ -56,9 +60,20 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(OrderReqDTO dto, String userEmail) throws IdInvalidException {
-        // 1. Lấy thông tin User
+        //Lấy thông tin người dùng
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IdInvalidException("Người dùng không tồn tại"));
+        //Bắt buộc thanh toán Order trước khi tạo Order mới
+        if (orderRepository.existsByUserAndStatus(user, OrderStatus.PENDING)) {
+            throw new IdInvalidException("Bạn đang có một đơn hàng chưa thanh toán! Vui lòng hoàn tất thanh toán hoặc hủy đơn cũ trước khi đặt vé mới.");
+        }
+        //Chỉ cho phép mua số lượng vé giới hạn trong 1 lần Order
+        int totalTicket = dto.getItems().stream()
+                .mapToInt(OrderItemReqDTO::getQuantity)
+                .sum();
+        if (totalTicket > maxTicketPerOrder) {
+            throw new IdInvalidException("Giới hạn mua quá mức! Bạn chỉ được mua tối đa " + maxTicketPerOrder + " vé trong một đơn hàng.");
+        }
 
         // ==========================================
         // BƯỚC TỐI ƯU 1: CHỐNG HACKER GỬI TRÙNG ID VÉ
@@ -85,7 +100,6 @@ public class OrderService {
         Map<Long, TicketType> ticketTypeMap = ticketTypes.stream()
                 .collect(Collectors.toMap(TicketType::getId, t -> t));
 
-        // 3. Tạo vỏ Order (Cái này là tạo mới hoàn toàn nên BẮT BUỘC phải save 1 lần để lấy ID)
         Order newOrder = Order.builder()
                 .user(user)
                 .orderCode(generateOrderCode())
@@ -97,14 +111,13 @@ public class OrderService {
         BigDecimal totalOrderAmount = BigDecimal.ZERO;
         List<OrderItem> orderItems = new ArrayList<>();
 
-        // 4. Xử lý logic trên danh sách đã gom nhóm
         for (Map.Entry<Long, Integer> entry : ticketQuantityMap.entrySet()) {
             Long ticketId = entry.getKey();
             Integer quantityToBuy = entry.getValue();
             TicketType ticketType = ticketTypeMap.get(ticketId);
 
             // Kiểm tra trạng thái
-            if (ticketType.getStatus() != StatusTicket.AVAILABLE) { // Nhớ sửa chính tả chữ AVAILABLE nhé
+            if (ticketType.getStatus() != StatusTicket.AVAILABLE) {
                 throw new IdInvalidException("Vé '" + ticketType.getTitle() + "' hiện không mở bán.");
             }
 
@@ -135,13 +148,8 @@ public class OrderService {
             orderItems.add(orderItem);
         }
 
-        // 5. Lưu toàn bộ Items xuống DB (1 cục)
         orderItemRepository.saveAll(orderItems);
-
-        // 6. Cập nhật lại tổng tiền. KHÔNG CẦN gọi orderRepository.save(newOrder) nữa.
-        // Khi hàm @Transactional kết thúc, Hibernate tự biết newOrder bị thay đổi TotalAmount và tự UPDATE.
         newOrder.setTotalAmount(totalOrderAmount);
-
         return newOrder;
     }
 }
