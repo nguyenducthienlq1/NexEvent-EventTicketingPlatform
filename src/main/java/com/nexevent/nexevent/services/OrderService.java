@@ -47,7 +47,7 @@ public class OrderService {
         this.userRepository = userRepository;
     }
     @Value("${nexevent.order.max-ticket-per-order}")
-    private int maxTicketPerOrder;
+    private int MAX_TICKET_PER_ORDER;
 
     private String generateOrderCode() {
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -63,24 +63,24 @@ public class OrderService {
     public Order createOrder(OrderReqDTO dto, String userEmail) {
         //Lấy thông tin người dùng
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new IdInvalidException("Người dùng không tồn tại"));
+                .orElseThrow(() -> new IdInvalidException("User doesn't exists"));
 
         // Dùng Redis khóa request spam, lỡ bấm nhanh quá
         String lockKey = "lock:create_order:" + user.getId();
         Boolean isLocked = redisTemplate.opsForValue().setIfAbsent(lockKey, "locked", 5, TimeUnit.SECONDS);
         if (Boolean.FALSE.equals(isLocked)) {
-            throw new IdInvalidException("Bạn thao tác quá nhanh! Vui lòng chờ vài giây.");
+            throw new IdInvalidException("You're working too fast! Please wait a few seconds.");
         }
         try {
             // Bắt buộc thanh toán Order trước khi tạo Order mới
             if (orderRepository.existsByUserAndStatus(user, OrderStatus.PENDING)) {
-                throw new IdInvalidException("Bạn đang có một đơn hàng chưa thanh toán! Vui lòng hoàn tất hoặc hủy đơn cũ.");
+                throw new IdInvalidException("You have an outstanding order! Please complete or cancel the old order.");
             }
 
             // Chỉ cho phép mua số lượng vé giới hạn
             int totalTicket = dto.getItems().stream().mapToInt(OrderItemReqDTO::getQuantity).sum();
-            if (totalTicket > maxTicketPerOrder) { // Lưu ý tên biến maxTicketsPerOrder
-                throw new IdInvalidException("Giới hạn mua quá mức! Bạn chỉ được mua tối đa " + maxTicketPerOrder + " vé.");
+            if (totalTicket > MAX_TICKET_PER_ORDER) { // Lưu ý tên biến maxTicketsPerOrder
+                throw new IdInvalidException("Excessive purchase limit! You can only buy a maximum of " + MAX_TICKET_PER_ORDER + " ticket.");
             }
 
             // Gom nhóm tránh Hacker gửi trùng ID vé
@@ -93,7 +93,7 @@ public class OrderService {
             // Lấy các loại vé (TicketType)
             List<TicketType> ticketTypes = ticketTypeRepository.findTicketsWithEventByIds(ticketQuantityMap.keySet());
             if (ticketTypes.size() != ticketQuantityMap.size()) {
-                throw new IdInvalidException("Một số loại vé không tồn tại trong hệ thống!");
+                throw new IdInvalidException("Some ticket types don't exist in the system!");
             }
 
             Map<Long, TicketType> ticketTypeMap = ticketTypes.stream()
@@ -117,19 +117,19 @@ public class OrderService {
                 TicketType ticketType = ticketTypeMap.get(ticketId);
 
                 if (ticketType.getStatus() != StatusTicket.AVAILABLE) {
-                    throw new IdInvalidException("Vé '" + ticketType.getTitle() + "' hiện không mở bán.");
+                    throw new IdInvalidException("Ticket '" + ticketType.getTitle() + "' is currently unavailable for sale.");
                 }
 
                 if (ticketType.getStartTime() != null && now.isBefore(ticketType.getStartTime())) {
-                    throw new IdInvalidException("Vé '" + ticketType.getTitle() + "' chưa tới giờ mở bán!");
+                    throw new IdInvalidException("The sale period for ticket '" + ticketType.getTitle() + "' has not started yet.");
                 }
 
                 if (ticketType.getEndTime() != null && now.isAfter(ticketType.getEndTime())) {
-                    throw new IdInvalidException("Vé '" + ticketType.getTitle() + "' đã kết thúc thời gian mở bán!");
+                    throw new IdInvalidException("The sale period for ticket '" + ticketType.getTitle() + "' has ended.");
                 }
 
-                if (ticketType.getEvent() == null || !ticketType.getEvent().isActive()) { // Chú ý hàm isActive()
-                    throw new IdInvalidException("Sự kiện của loại vé này đã bị hủy hoặc ngừng hoạt động!");
+                if (ticketType.getEvent() == null || !ticketType.getEvent().isActive()) {
+                    throw new IdInvalidException("The event associated with this ticket has been canceled or is inactive.");
                 }
 
                 // Tính toán số lượng vé còn lại
@@ -137,7 +137,7 @@ public class OrderService {
                 int remainQty = ticketType.getTotalQuantity() - currentSold;
 
                 if (remainQty < quantityToBuy) {
-                    throw new IdInvalidException("Vé '" + ticketType.getTitle() + "' chỉ còn " + remainQty + " vé!");
+                    throw new IdInvalidException("Not enough tickets available. Ticket '" + ticketType.getTitle() + "' only has " + remainQty + " remaining.");
                 }
 
                 BigDecimal itemSubtotal = ticketType.getPrice().multiply(BigDecimal.valueOf(quantityToBuy));

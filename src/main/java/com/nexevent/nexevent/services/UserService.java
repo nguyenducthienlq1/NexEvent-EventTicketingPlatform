@@ -9,6 +9,7 @@ import com.nexevent.nexevent.repositories.UserRepository;
 
 import com.nexevent.nexevent.utils.exception.IdInvalidException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -76,12 +77,14 @@ public class UserService {
         }
         return false;
     }
-    private static final long OTP_EXPIRATION_MINUTES = 5;
-    private static final int MAX_OTP_ATTEMPTS = 5;
+    @Value("${nexevent.order.expired-time-reset-password}")
+    private int OTP_EXPIRATION_MINUTES;
+    @Value("${nexevent.order.number-of-entry}")
+    private int MAX_OTP_ATTEMPTS;
 
     public void processForgotPassword(String email) {
         userRepository.findByEmail(email)
-                .orElseThrow(() -> new IdInvalidException("Không tìm thấy tài khoản với Email này!"));
+                .orElseThrow(() -> new IdInvalidException("Couldn't find User with this Email!"));
         String otp = String.format("%06d", new SecureRandom().nextInt(999999));
 
         String otpKey = "reset_pw:otp:" + email;
@@ -96,7 +99,7 @@ public class UserService {
     public void processResetPassword(ResetPasswordReqDTO dto)  {
         // 1. Check xác nhận mật khẩu
         if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
-            throw new IdInvalidException("Mật khẩu xác nhận không trùng khớp!");
+            throw new IdInvalidException("Confirm Password no match Password!");
         }
 
         String email = dto.getEmail();
@@ -106,7 +109,7 @@ public class UserService {
         // 2. Lấy OTP từ Redis
         String savedOtp = redisTemplate.opsForValue().get(otpKey);
         if (savedOtp == null) {
-            throw new IdInvalidException("Mã OTP đã hết hạn hoặc không tồn tại. Vui lòng yêu cầu lại!");
+            throw new IdInvalidException("The OTP code has expired or not exists. Send another request, Please!");
         }
 
         // 3. Check số lần nhập sai
@@ -114,13 +117,13 @@ public class UserService {
         int attempts = (attemptsStr != null) ? Integer.parseInt(attemptsStr) : 0;
         if (attempts >= MAX_OTP_ATTEMPTS) {
             redisTemplate.delete(otpKey);
-            throw new IdInvalidException("Nhập sai quá " + MAX_OTP_ATTEMPTS + " lần. OTP đã bị hủy để bảo mật!");
+            throw new IdInvalidException("The OTP is entered incorrectly more than " + MAX_OTP_ATTEMPTS + " times. OTP have canceled!");
         }
 
         // 4. Đối chiếu OTP
         if (!savedOtp.equals(dto.getOtp())) {
             redisTemplate.opsForValue().increment(attemptKey);
-            throw new IdInvalidException("Mã OTP không chính xác!");
+            throw new IdInvalidException("The OTP incorrectly received the saved OTP!");
         }
 
         // 5. Cập nhật mật khẩu mới xuống Database

@@ -2,6 +2,7 @@ package com.nexevent.nexevent.services;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -18,6 +19,8 @@ public class EmailService {
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
     }
+    @Value("${nexevent.order.expired-time-reset-password}")
+    private int EXPIRED_RESET_PASSWORD;
 
     @Async
     public void sendOtpEmail(String toEmail, String otp) {
@@ -29,13 +32,13 @@ public class EmailService {
             helper.setSubject("[NexEvent] Mã xác nhận đặt lại mật khẩu");
             Context context = new Context();
             context.setVariable("otp", otp);
-            context.setVariable("expiry", 5); // Có thể lấy từ hằng số
+            context.setVariable("expiry", EXPIRED_RESET_PASSWORD);
             String htmlContent = templateEngine.process("ResetPassword", context);
             helper.setText(htmlContent, true);
 
             mailSender.send(message);
         } catch (MessagingException e) {
-            throw new RuntimeException("Gửi mail thất bại: " + e.getMessage());
+            throw new RuntimeException("Mail sending failed : " + e.getMessage());
         }
     }
 }

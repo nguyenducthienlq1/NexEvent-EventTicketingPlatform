@@ -12,8 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TicketTypeService {
@@ -28,11 +26,11 @@ public class TicketTypeService {
 
     public TicketTypeResDTO createTicketType(TicketTypeReqDTO dto){
         if (dto.getStartTime().isAfter(dto.getEndTime())) {
-            throw new IdInvalidException("Thời gian mở bán không thể sau thời gian đóng bán!");
+            throw new IdInvalidException("The opening time for sales cannot be after the closing time.!");
         }
 
         Event event = eventRepository.findById(dto.getEventId())
-                .orElseThrow(() -> new IdInvalidException("Không tìm thấy sự kiện ID: " + dto.getEventId()));
+                .orElseThrow(() -> new IdInvalidException("Cannot find Event have ID: " + dto.getEventId()));
 
         TicketType newTicket = TicketType.builder()
                 .event(event)
@@ -52,10 +50,10 @@ public class TicketTypeService {
 
     public TicketTypeResDTO updateTicketType(Long id, TicketTypeReqDTO dto){
         TicketType ticket = ticketTypeRepository.findById(id)
-                .orElseThrow(() -> new IdInvalidException("Không tìm thấy loại vé ID: " + id));
+                .orElseThrow(() -> new IdInvalidException("Cannot find TicketType have ID: " + id));
 
         if (dto.getTotalQuantity() < ticket.getSoldQuantity()) {
-            throw new IdInvalidException("Tổng số lượng không thể nhỏ hơn số vé đã bán (" + ticket.getSoldQuantity() + ")");
+            throw new IdInvalidException("The total number cannot be less than the number of tickets sold (" + ticket.getSoldQuantity() + ")");
         }
 
         ticket.setTitle(dto.getTitle());
@@ -75,7 +73,7 @@ public class TicketTypeService {
 
     public void deleteTicketType(Long id) {
         TicketType ticket = ticketTypeRepository.findById(id)
-                .orElseThrow(() -> new IdInvalidException("Không tìm thấy loại vé ID: " + id));
+                .orElseThrow(() -> new IdInvalidException("Cannot find TicketType have ID: " + id));
 
         ticket.setStatus(StatusTicket.UNAVAILABE);
         ticketTypeRepository.save(ticket);

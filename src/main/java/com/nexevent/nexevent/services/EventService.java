@@ -44,10 +44,10 @@ public class EventService {
     }
     public EventResDTO updateEvent(Long eventId, EventReqDTO dto) {
         if (dto.getStartTime().isAfter(dto.getEndTime())) {
-            throw new IdInvalidException("Thời gian bắt đầu không thể sau thời gian kết thúc!");
+            throw new IdInvalidException("The start time can't be after the end time!");
         }
         Event currentEvent = eventRepository.findById(eventId)
-                .orElseThrow(() -> new IdInvalidException("Không tìm thấy sự kiện với ID: " + eventId));
+                .orElseThrow(() -> new IdInvalidException("Can't find the event with ID: " + eventId));
 
         currentEvent.setTitle(dto.getTitle());
         currentEvent.setDescription(dto.getDescription());
@@ -63,7 +63,7 @@ public class EventService {
 
     public void deleteEvent(Long eventId){
         Event currentEvent = eventRepository.findById(eventId)
-                .orElseThrow(() -> new IdInvalidException("Không tìm thấy sự kiện với ID: " + eventId));
+                .orElseThrow(() -> new IdInvalidException("Can't find the event with ID: " + eventId));
 
         currentEvent.setActive(false);
         eventRepository.save(currentEvent);
@@ -81,7 +81,7 @@ public class EventService {
 
     public EventResDTO getEventById(Long eventId) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new IdInvalidException("Không tìm thấy sự kiện với ID: " + eventId));
+                .orElseThrow(() -> new IdInvalidException("Can't find the event with ID: " + eventId));
 
         return convertToResDTO(event);
     }

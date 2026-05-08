@@ -60,7 +60,7 @@ public class EventController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ADMIN')") // CHẶN: Chỉ ai mang Role ADMIN mới chui qua được
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ApiMessage("Tạo sự kiện thành công")
     @Operation(summary = "Tạo sự kiện mới (ADMIN)", description = "Thêm mới một sự kiện vào hệ thống")
     @ApiResponses(value = {
