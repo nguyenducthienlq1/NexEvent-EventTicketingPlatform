@@ -123,6 +123,11 @@
 			<version>1.21.3</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>1.36.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

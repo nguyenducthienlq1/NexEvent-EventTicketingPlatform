@@ -10,17 +10,24 @@ import com.nexevent.nexevent.utils.exception.IdInvalidException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class EventService {
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final CloudinaryService cloudinaryService;
 
-    public EventService(EventRepository eventRepository, UserRepository userRepository) {
+    public EventService(EventRepository eventRepository,
+                        UserRepository userRepository,
+                        CloudinaryService cloudinaryService) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.cloudinaryService = cloudinaryService;
     }
+    @Transactional
     public EventResDTO createEvent(EventReqDTO dto, String adminEmail) {
         if (dto.getStartTime().isAfter(dto.getEndTime())) {
             throw new IdInvalidException("Thời gian bắt đầu không thể sau thời gian kết thúc!");
@@ -42,12 +49,18 @@ public class EventService {
         eventRepository.save(newEvent);
         return convertToResDTO(newEvent);
     }
+    @Transactional
     public EventResDTO updateEvent(Long eventId, EventReqDTO dto) {
         if (dto.getStartTime().isAfter(dto.getEndTime())) {
             throw new IdInvalidException("The start time can't be after the end time!");
         }
+
         Event currentEvent = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IdInvalidException("Can't find the event with ID: " + eventId));
+
+        if (currentEvent.getCover() != null && !currentEvent.getCover().equals(dto.getCover())) {
+            cloudinaryService.deleteImageByUrl(currentEvent.getCover());
+        }
 
         currentEvent.setTitle(dto.getTitle());
         currentEvent.setDescription(dto.getDescription());
