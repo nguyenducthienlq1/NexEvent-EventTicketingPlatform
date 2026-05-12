@@ -5,10 +5,9 @@ import com.nexevent.nexevent.domains.entities.Order;
 import com.nexevent.nexevent.domains.entities.OrderItem;
 import com.nexevent.nexevent.domains.entities.TicketType;
 import com.nexevent.nexevent.domains.enums.OrderStatus;
-import com.nexevent.nexevent.domains.enums.StatusTicket;
+import com.nexevent.nexevent.domains.enums.StatusTicketType;
 import com.nexevent.nexevent.repositories.OrderItemRepository;
 import com.nexevent.nexevent.repositories.OrderRepository;
-import com.nexevent.nexevent.repositories.TicketTypeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -56,8 +55,8 @@ public class OrderCleanupTask {
             // Trả lại số lượng đã bán cho Loại vé
             ticketType.setSoldQuantity(currentSold - orderItem.getQuantity());
             // Nếu loại vé đó SOLD_OUT thì chuyển lại thành AVAILABLE
-            if (ticketType.getStatus() == StatusTicket.SOLD_OUT){
-                ticketType.setStatus(StatusTicket.AVAILABLE);
+            if (ticketType.getStatus() == StatusTicketType.SOLD_OUT){
+                ticketType.setStatus(StatusTicketType.AVAILABLE);
             }
             log.info("[ORDER CLEANUP] Cleanup complete! Tickets successfully restored to inventory.");        }
     }

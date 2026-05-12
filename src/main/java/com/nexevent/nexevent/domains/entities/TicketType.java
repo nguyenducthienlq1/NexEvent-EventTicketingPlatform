@@ -1,6 +1,6 @@
 package com.nexevent.nexevent.domains.entities;
 
-import com.nexevent.nexevent.domains.enums.StatusTicket;
+import com.nexevent.nexevent.domains.enums.StatusTicketType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -46,7 +46,7 @@ public class TicketType {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private StatusTicket status;
+    private StatusTicketType status;
 
     @Version
     private Long version;

@@ -2,16 +2,12 @@ package com.nexevent.nexevent.services;
 
 import com.nexevent.nexevent.domains.dto.request.OrderItemReqDTO;
 import com.nexevent.nexevent.domains.dto.request.OrderReqDTO;
-import com.nexevent.nexevent.domains.entities.Order;
-import com.nexevent.nexevent.domains.entities.OrderItem;
-import com.nexevent.nexevent.domains.entities.TicketType;
-import com.nexevent.nexevent.domains.entities.User;
+import com.nexevent.nexevent.domains.dto.response.OrderResDTO;
+import com.nexevent.nexevent.domains.dto.response.ResOrderPaidDTO;
+import com.nexevent.nexevent.domains.entities.*;
 import com.nexevent.nexevent.domains.enums.OrderStatus;
-import com.nexevent.nexevent.domains.enums.StatusTicket;
-import com.nexevent.nexevent.repositories.OrderItemRepository;
-import com.nexevent.nexevent.repositories.OrderRepository;
-import com.nexevent.nexevent.repositories.TicketTypeRepository;
-import com.nexevent.nexevent.repositories.UserRepository;
+import com.nexevent.nexevent.domains.enums.StatusTicketType;
+import com.nexevent.nexevent.repositories.*;
 import com.nexevent.nexevent.utils.exception.IdInvalidException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -35,16 +32,19 @@ public class OrderService {
     private final RedisTemplate<String, String> redisTemplate;
     private final TicketTypeRepository ticketTypeRepository;
     private final UserRepository userRepository;
+    private final TicketService ticketService;
     public OrderService(OrderRepository orderRepository,
                         RedisTemplate<String, String> redisTemplate,
                         OrderItemRepository orderItemRepository,
                         TicketTypeRepository ticketTypeRepository,
-                        UserRepository userRepository) {
+                        UserRepository userRepository,
+                        TicketService ticketService) {
         this.orderRepository = orderRepository;
         this.redisTemplate = redisTemplate;
         this.orderItemRepository = orderItemRepository;
         this.ticketTypeRepository = ticketTypeRepository;
         this.userRepository = userRepository;
+        this.ticketService = ticketService;
     }
     @Value("${nexevent.order.max-ticket-per-order}")
     private int MAX_TICKET_PER_ORDER;
@@ -60,7 +60,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(OrderReqDTO dto, String userEmail) {
+    public OrderResDTO createOrder(OrderReqDTO dto, String userEmail) {
         //Lấy thông tin người dùng
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new IdInvalidException("User doesn't exists"));
@@ -79,7 +79,7 @@ public class OrderService {
 
             // Chỉ cho phép mua số lượng vé giới hạn
             int totalTicket = dto.getItems().stream().mapToInt(OrderItemReqDTO::getQuantity).sum();
-            if (totalTicket > MAX_TICKET_PER_ORDER) { // Lưu ý tên biến maxTicketsPerOrder
+            if (totalTicket > MAX_TICKET_PER_ORDER) {
                 throw new IdInvalidException("Excessive purchase limit! You can only buy a maximum of " + MAX_TICKET_PER_ORDER + " ticket.");
             }
 
@@ -116,7 +116,7 @@ public class OrderService {
                 Integer quantityToBuy = entry.getValue();
                 TicketType ticketType = ticketTypeMap.get(ticketId);
 
-                if (ticketType.getStatus() != StatusTicket.AVAILABLE) {
+                if (ticketType.getStatus() != StatusTicketType.AVAILABLE) {
                     throw new IdInvalidException("Ticket '" + ticketType.getTitle() + "' is currently unavailable for sale.");
                 }
 
@@ -146,7 +146,7 @@ public class OrderService {
                 // Cập nhật số lượng vé
                 ticketType.setSoldQuantity(currentSold + quantityToBuy);
                 if (ticketType.getSoldQuantity().equals(ticketType.getTotalQuantity())) {
-                    ticketType.setStatus(StatusTicket.SOLD_OUT);
+                    ticketType.setStatus(StatusTicketType.SOLD_OUT);
                 }
 
                 OrderItem orderItem = OrderItem.builder()
@@ -161,11 +161,52 @@ public class OrderService {
 
             orderItemRepository.saveAll(orderItems);
             newOrder.setTotalAmount(totalOrderAmount);
-            return newOrder;
+
+            return revertToResDTO(newOrder);
 
         } finally {
             // Mở khóa Redis ngay lập tức sau khi chạy xong (dù thành công hay thất bại)
             redisTemplate.delete(lockKey);
         }
+    }
+
+
+    public void cancelOrder(Long id) {
+        Optional<Order> order = orderRepository.findById(id);
+        if (!order.isPresent()) {
+            throw new IdInvalidException("Order with id '" + id + "' does not exist!");
+        }
+        order.get().setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order.get());
+    }
+    @Transactional
+    public ResOrderPaidDTO processPayment(Long idOrder){
+        Optional<Order> order = orderRepository.findById(idOrder);
+        if (!order.isPresent()) {
+            throw new IdInvalidException("Order with id '" + idOrder + "' does not exist!");
+        }
+        order.get().setStatus(OrderStatus.PAID);
+        orderRepository.save(order.get());
+        List<Ticket> createdTicket =  ticketService.createAllTicketsOfOrder(idOrder);
+        return ResOrderPaidDTO.builder()
+                .orderCode(order.get().getOrderCode())
+                .status(order.get().getStatus().toString())
+                .totalTicketsGenerated(createdTicket.size())
+                .tickets(createdTicket.stream().map(t -> ResOrderPaidDTO.TicketInfo.builder()
+                        .id(t.getId())
+                        .ticketTypeName(t.getOrderItem().getTicketType().getTitle())
+                        .qrCode(t.getQrCode()).build()).toList())
+                .build();
+    }
+    public OrderResDTO revertToResDTO(Order order) {
+        return OrderResDTO
+                .builder()
+                .id(order.getId())
+                .orderCode(order.getOrderCode())
+                .totalAmount(order.getTotalAmount())
+                .status(order.getStatus())
+                .createdAt(order.getCreatedAt())
+                .build();
+
     }
 }

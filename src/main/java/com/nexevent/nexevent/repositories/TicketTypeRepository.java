@@ -1,7 +1,7 @@
 package com.nexevent.nexevent.repositories;
 
 import com.nexevent.nexevent.domains.entities.TicketType;
-import com.nexevent.nexevent.domains.enums.StatusTicket;
+import com.nexevent.nexevent.domains.enums.StatusTicketType;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Repository
 public interface TicketTypeRepository extends JpaRepository<TicketType, Long> {
-    Page<TicketType> findByEventIdAndStatus(Long eventId, StatusTicket status, Pageable pageable);
+    Page<TicketType> findByEventIdAndStatus(Long eventId, StatusTicketType status, Pageable pageable);
 
     Page<TicketType> findByEventId(Long eventId, Pageable pageable);
 

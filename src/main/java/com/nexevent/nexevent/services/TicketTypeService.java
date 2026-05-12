@@ -4,7 +4,7 @@ import com.nexevent.nexevent.domains.dto.request.TicketTypeReqDTO;
 import com.nexevent.nexevent.domains.dto.response.TicketTypeResDTO;
 import com.nexevent.nexevent.domains.entities.Event;
 import com.nexevent.nexevent.domains.entities.TicketType;
-import com.nexevent.nexevent.domains.enums.StatusTicket;
+import com.nexevent.nexevent.domains.enums.StatusTicketType;
 import com.nexevent.nexevent.repositories.EventRepository;
 import com.nexevent.nexevent.repositories.TicketTypeRepository;
 import com.nexevent.nexevent.utils.exception.IdInvalidException;
@@ -41,7 +41,7 @@ public class TicketTypeService {
                 .soldQuantity(0)
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
-                .status(StatusTicket.AVAILABLE)
+                .status(StatusTicketType.AVAILABLE)
                 .build();
 
         ticketTypeRepository.save(newTicket);
@@ -63,8 +63,8 @@ public class TicketTypeService {
         ticket.setStartTime(dto.getStartTime());
         ticket.setEndTime(dto.getEndTime());
 
-        if (ticket.getStatus() == StatusTicket.SOLD_OUT && ticket.getTotalQuantity() > ticket.getSoldQuantity()) {
-            ticket.setStatus(StatusTicket.AVAILABLE);
+        if (ticket.getStatus() == StatusTicketType.SOLD_OUT && ticket.getTotalQuantity() > ticket.getSoldQuantity()) {
+            ticket.setStatus(StatusTicketType.AVAILABLE);
         }
 
         ticketTypeRepository.save(ticket);
@@ -75,7 +75,7 @@ public class TicketTypeService {
         TicketType ticket = ticketTypeRepository.findById(id)
                 .orElseThrow(() -> new IdInvalidException("Cannot find TicketType have ID: " + id));
 
-        ticket.setStatus(StatusTicket.UNAVAILABE);
+        ticket.setStatus(StatusTicketType.UNAVAILABE);
         ticketTypeRepository.save(ticket);
     }
 
@@ -86,7 +86,7 @@ public class TicketTypeService {
 
 
     public Page<TicketTypeResDTO> getActiveTicketsByEvent(Long eventId, Pageable pageable) {
-        return ticketTypeRepository.findByEventIdAndStatus(eventId, StatusTicket.AVAILABLE, pageable)
+        return ticketTypeRepository.findByEventIdAndStatus(eventId, StatusTicketType.AVAILABLE, pageable)
                 .map(this::convertToResDTO);
     }
 

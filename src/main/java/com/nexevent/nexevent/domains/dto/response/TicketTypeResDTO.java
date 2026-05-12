@@ -1,6 +1,6 @@
 package com.nexevent.nexevent.domains.dto.response;
 
-import com.nexevent.nexevent.domains.enums.StatusTicket;
+import com.nexevent.nexevent.domains.enums.StatusTicketType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,5 +21,5 @@ public class TicketTypeResDTO {
     private Integer remainQuantity;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private StatusTicket status;
+    private StatusTicketType status;
 }

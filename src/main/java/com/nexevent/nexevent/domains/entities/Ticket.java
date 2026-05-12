@@ -1,5 +1,6 @@
 package com.nexevent.nexevent.domains.entities;
 
+import com.nexevent.nexevent.domains.enums.StatusTicket;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,7 +24,11 @@ public class Ticket {
     private OrderItem orderItem;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private StatusTicket status;
+
+    @Column(name = "qrcode", nullable = false)
+    private String qrCode;
 
     @CreationTimestamp
     @Column(name = "issued_at", updatable = false)
