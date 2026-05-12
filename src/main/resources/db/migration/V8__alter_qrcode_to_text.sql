@@ -1,0 +1,2 @@
+ALTER TABLE tickets
+ALTER COLUMN qrcode TYPE TEXT;

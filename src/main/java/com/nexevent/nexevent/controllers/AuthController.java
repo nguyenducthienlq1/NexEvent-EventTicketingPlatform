@@ -74,8 +74,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Account not activated or blocked"),
             @ApiResponse(responseCode = "401", description = "Invalid credentials")
     })
-    public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody LoginDTO loginDTO,
-                                             HttpServletRequest request) throws IdInvalidException {
+    public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody LoginDTO loginDTO) throws IdInvalidException {
         try {
             User user = (userService.getUserByEmail(loginDTO.getEmail()))
                     .orElseThrow(() -> new IdInvalidException("Email hoặc mật khẩu không chính xác!"));

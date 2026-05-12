@@ -4,7 +4,6 @@ import com.nexevent.nexevent.domains.entities.OrderItem;
 import com.nexevent.nexevent.domains.entities.Ticket;
 import com.nexevent.nexevent.domains.enums.StatusTicket;
 import com.nexevent.nexevent.repositories.OrderItemRepository;
-import com.nexevent.nexevent.repositories.OrderRepository;
 import com.nexevent.nexevent.repositories.TicketRepository;
 import com.nexevent.nexevent.utils.TicketQrUtil;
 import org.springframework.stereotype.Service;
@@ -13,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TicketService {
@@ -46,5 +46,11 @@ public class TicketService {
             }
         }
         return ticketRepository.saveAll(ticketList);
+    }
+    public Optional<Ticket> findById(String id){
+        return ticketRepository.findById(id);
+    }
+    public void saveTicket(Ticket ticket){
+        ticketRepository.save(ticket);
     }
 }
