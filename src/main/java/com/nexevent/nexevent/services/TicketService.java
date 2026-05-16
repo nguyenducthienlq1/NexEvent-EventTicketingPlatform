@@ -1,11 +1,15 @@
 package com.nexevent.nexevent.services;
 
+import com.nexevent.nexevent.domains.dto.response.ResTicketDTO;
 import com.nexevent.nexevent.domains.entities.OrderItem;
 import com.nexevent.nexevent.domains.entities.Ticket;
 import com.nexevent.nexevent.domains.enums.StatusTicket;
 import com.nexevent.nexevent.repositories.OrderItemRepository;
 import com.nexevent.nexevent.repositories.TicketRepository;
+import com.nexevent.nexevent.utils.SecurityUtil;
 import com.nexevent.nexevent.utils.TicketQrUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,5 +56,20 @@ public class TicketService {
     }
     public void saveTicket(Ticket ticket){
         ticketRepository.save(ticket);
+    }
+    public Page<ResTicketDTO> getMyTickets(StatusTicket status, Pageable pageable) {
+        String currentUserEmail = SecurityUtil.getCurrentUserEmail();
+
+        Page<Ticket> ticketPage = ticketRepository.findMyTickets(currentUserEmail, status, pageable);
+
+        return ticketPage.map(ticket -> ResTicketDTO.builder()
+                .ticketId(ticket.getId())
+                .eventName(ticket.getOrderItem().getTicketType().getEvent().getTitle())
+                .eventStartTime(ticket.getOrderItem().getTicketType().getEvent().getStartTime())
+                .eventLocation(ticket.getOrderItem().getTicketType().getEvent().getLocation())
+                .ticketTypeName(ticket.getOrderItem().getTicketType().getTitle())
+                .status(ticket.getStatus().name())
+                .qrCode(ticket.getQrCode())
+                .build());
     }
 }
