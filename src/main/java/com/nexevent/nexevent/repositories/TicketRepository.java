@@ -24,4 +24,16 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
     Page<Ticket> findMyTickets(@Param("email") String email,
                                @Param("status") StatusTicket status,
                                Pageable pageable);
+
+    @Query("SELECT SUM(oi.unitPrice) FROM Ticket t " +
+            "JOIN t.orderItem oi JOIN oi.ticketType tt " +
+            "WHERE tt.event.id = :eventId")
+    Double getTotalRevenueByEvent(@Param("eventId") Long eventId);
+
+    // 2. Đếm số vé đã bán và số vé đã Check-in (USED)
+    @Query("SELECT COUNT(t.id), " +
+            "SUM(CASE WHEN t.status = 'USED' THEN 1 ELSE 0 END) " +
+            "FROM Ticket t JOIN t.orderItem oi JOIN oi.ticketType tt " +
+            "WHERE tt.event.id = :eventId")
+    Object[] getCheckinStatsByEvent(@Param("eventId") Long eventId);
 }

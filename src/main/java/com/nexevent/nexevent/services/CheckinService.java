@@ -1,6 +1,7 @@
 package com.nexevent.nexevent.services;
 
 import com.nexevent.nexevent.domains.dto.request.TicketCheckInReqDTO;
+import com.nexevent.nexevent.domains.dto.response.ResLiveCheckinDTO;
 import com.nexevent.nexevent.domains.dto.response.ResTicketCheckInDTO;
 import com.nexevent.nexevent.domains.entities.Checkin;
 import com.nexevent.nexevent.domains.entities.Ticket;
@@ -20,16 +21,18 @@ public class CheckinService {
     private final TicketService ticketService;
     private final TicketQrUtil ticketQrUtil;
     private final UserService userService;
+    private final DashboardService dashboardService;
 
     public CheckinService(CheckinRepository checkinRepository,
                           TicketQrUtil ticketQrUtil,
                           TicketService ticketService,
-                          UserService userService){
+                          UserService userService,
+                          DashboardService dashboardService){
         this.checkinRepository = checkinRepository;
         this.ticketQrUtil = ticketQrUtil;
         this.ticketService = ticketService;
         this.userService = userService;
-
+        this.dashboardService = dashboardService;
     }
     public ResTicketCheckInDTO checkinMethod(TicketCheckInReqDTO reqDTO){
         // Giải mã Token
@@ -64,6 +67,17 @@ public class CheckinService {
                 .gate(reqDTO.getGate())
                 .build();
         checkinRepository.save(checkin);
+        //Phát tín hiệu qua LOG
+        ResLiveCheckinDTO liveData = ResLiveCheckinDTO.builder()
+                .eventName(ticket.get().getOrderItem().getTicketType().getEvent().getTitle())
+                .gate(reqDTO.getGate())
+                .ticketType(ticket.get().getOrderItem().getTicketType().getTitle())
+                .status("SUCCESS")
+                .message("Khách hàng vừa check-in thành công tại " + reqDTO.getGate())
+                .build();
+        dashboardService.broadcastCheckinEvent(ticket.get().getOrderItem().getTicketType().getEvent().getId(), liveData);
+        Long eventId = ticket.get().getOrderItem().getTicketType().getEvent().getId();
+        dashboardService.broadcastWidgetUpdates(eventId);
         //Lưu
         return ResTicketCheckInDTO.builder()
                 .ticketId(ticketId)

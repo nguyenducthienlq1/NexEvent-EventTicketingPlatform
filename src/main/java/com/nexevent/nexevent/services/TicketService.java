@@ -1,5 +1,6 @@
 package com.nexevent.nexevent.services;
 
+import com.nexevent.nexevent.domains.dto.response.ResCheckinStatsDTO;
 import com.nexevent.nexevent.domains.dto.response.ResTicketDTO;
 import com.nexevent.nexevent.domains.entities.OrderItem;
 import com.nexevent.nexevent.domains.entities.Ticket;
@@ -71,5 +72,22 @@ public class TicketService {
                 .status(ticket.getStatus().name())
                 .qrCode(ticket.getQrCode())
                 .build());
+    }
+    public ResCheckinStatsDTO getCheckinStatsWidget(Long eventId) {
+        Object[] rawData = (Object[]) ticketRepository.getCheckinStatsByEvent(eventId)[0];
+        Long totalSold = rawData[0] != null ? ((Number) rawData[0]).longValue() : 0L;
+        Long totalCheckedIn = rawData[1] != null ? ((Number) rawData[1]).longValue() : 0L;
+
+        double rate = 0.0;
+        if (totalSold > 0) {
+            rate = ((double) totalCheckedIn / totalSold) * 100;
+            rate = Math.round(rate * 100.0) / 100.0;
+        }
+
+        return ResCheckinStatsDTO.builder()
+                .totalSold(totalSold)
+                .totalCheckedIn(totalCheckedIn)
+                .checkinRate(rate)
+                .build();
     }
 }

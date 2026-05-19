@@ -16,6 +16,7 @@ import java.util.Set;
 public interface TicketTypeRepository extends JpaRepository<TicketType, Long> {
     Page<TicketType> findByEventIdAndStatus(Long eventId, StatusTicketType status, Pageable pageable);
 
+    List<TicketType> findByEventId(Long eventId);
     Page<TicketType> findByEventId(Long eventId, Pageable pageable);
 
     @Query("SELECT t FROM TicketType t JOIN FETCH t.event WHERE t.id IN :ids")
