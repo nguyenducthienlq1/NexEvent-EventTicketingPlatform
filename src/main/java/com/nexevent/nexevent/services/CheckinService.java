@@ -8,9 +8,9 @@ import com.nexevent.nexevent.domains.entities.Ticket;
 import com.nexevent.nexevent.domains.entities.User;
 import com.nexevent.nexevent.domains.enums.StatusTicket;
 import com.nexevent.nexevent.repositories.CheckinRepository;
-import com.nexevent.nexevent.repositories.TicketRepository;
 import com.nexevent.nexevent.utils.SecurityUtil;
 import com.nexevent.nexevent.utils.TicketQrUtil;
+import com.nexevent.nexevent.utils.exception.IdInvalidException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -41,19 +41,19 @@ public class CheckinService {
         // Xác thực danh tính nhân viên
         String staffEmail = SecurityUtil.getCurrentUserEmail();
         if (staffEmail == null){
-            throw new RuntimeException("Access denied, please try again");
+            throw new IdInvalidException("Access denied, please try again");
         }
         Optional<User> staff = userService.getUserByEmail(staffEmail);
         if (!staff.isPresent()){
-            throw new RuntimeException("Access denied, please try again");
+            throw new IdInvalidException("Access denied, please try again");
         }
         // Kiểm tra vé từ ticketId lấy trong Token
         Optional<Ticket> ticket = ticketService.findById(ticketId);
         if (!ticket.isPresent()){
-            throw new RuntimeException("Ticket does not exist");
+            throw new IdInvalidException("Ticket does not exist");
         }
         if (ticket.get().getStatus() == StatusTicket.USED){
-            throw new RuntimeException("Ticket is already used");
+            throw new IdInvalidException("Ticket is already used");
         }
         // Tất cả hợp lệ
         //Đánh dấu vé đã sử dụng

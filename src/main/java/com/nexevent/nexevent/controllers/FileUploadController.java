@@ -2,6 +2,7 @@ package com.nexevent.nexevent.controllers;
 
 import com.nexevent.nexevent.domains.dto.response.RestResponse;
 import com.nexevent.nexevent.services.CloudinaryService;
+import com.nexevent.nexevent.utils.exception.IdInvalidException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,7 +36,7 @@ public class FileUploadController {
             @RequestParam(value = "folder", defaultValue = "nexevent/others") String folder) {
 
         if (file.isEmpty()) {
-            throw new RuntimeException("File tải lên không được để trống!");
+            throw new IdInvalidException("File tải lên không được để trống!");
         }
         String imageUrl = cloudinaryService.uploadImage(file, folder);
 
@@ -57,7 +58,7 @@ public class FileUploadController {
             @RequestParam("url") String imageUrl) {
 
         if (imageUrl == null || imageUrl.trim().isEmpty()) {
-            throw new RuntimeException("URL ảnh không hợp lệ!");
+            throw new IdInvalidException("URL ảnh không hợp lệ!");
         }
 
         // Gọi Service tiến hành xóa trên Cloudinary

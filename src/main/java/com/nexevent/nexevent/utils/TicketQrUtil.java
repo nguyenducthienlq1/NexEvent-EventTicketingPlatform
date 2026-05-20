@@ -1,6 +1,7 @@
 package com.nexevent.nexevent.utils;
 
 import com.nexevent.nexevent.domains.entities.Ticket;
+import com.nexevent.nexevent.utils.exception.IdInvalidException;
 import com.nimbusds.jose.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -23,7 +24,7 @@ public class TicketQrUtil {
 
     public static final MacAlgorithm JWT_ALGORITHM = MacAlgorithm.HS512;
 
-    @Value("${ducthien.jwt.base64-secret}")
+    @Value("${jwt.base64-secret}")
     private String jwtSecret;
 
     private SecretKey getSecretKey() {
@@ -62,7 +63,7 @@ public class TicketQrUtil {
             return decodedJwt.getSubject();
         } catch (Exception e) {
             System.out.println(">>> Lỗi quét QR Code: " + e.getMessage());
-            throw new RuntimeException("Mã QR không hợp lệ, đã hết hạn hoặc bị làm giả!");
+            throw new IdInvalidException("Mã QR không hợp lệ, đã hết hạn hoặc bị làm giả!");
         }
     }
 }
