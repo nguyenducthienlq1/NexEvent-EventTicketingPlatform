@@ -46,7 +46,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Value("${ducthien.jwt.base64-secret}")
+    @Value("${jwt.base64-secret}")
     private String jwtKey;
 
     private SecretKey getSecretKey(){

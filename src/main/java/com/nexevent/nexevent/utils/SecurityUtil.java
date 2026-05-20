@@ -26,13 +26,13 @@ public class SecurityUtil {
 
     public static final MacAlgorithm JWT_ALGORITHM = MacAlgorithm.HS512;
 
-    @Value("${ducthien.jwt.base64-secret}")
+    @Value("${jwt.base64-secret}")
     private String jwtKey;
 
-    @Value("${ducthien.jwt.access-token-validity-in-seconds}")
+    @Value("${jwt.access-token-validity-in-seconds}")
     private long accessTokenExpiration;
 
-    @Value("${ducthien.jwt.refresh-token-validity-in-seconds}")
+    @Value("${jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
     private SecretKey getSecretKey() {
