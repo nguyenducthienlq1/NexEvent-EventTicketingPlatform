@@ -12,6 +12,7 @@ Backend cho nền tảng bán vé sự kiện: xác thực người dùng, quả
 - API docs: SpringDoc OpenAPI (Swagger UI)
 - Media: Cloudinary
 - Email: Spring Mail + Thymeleaf template
+- Payment: PayOS 
 - Build tool: Maven Wrapper (`mvnw`, `mvnw.cmd`)
 
 ## Yêu Cầu Môi Trường
@@ -39,6 +40,9 @@ Tối thiểu cần có:
 - `CLOUDINARY_API_SECRET`
 - `SPRING_DATA_REDIS_HOST`
 - `SPRING_DATA_REDIS_PORT`
+- `PAYOS.CLIENT-ID`
+- `PAYOS.API-KEY`
+- `PAYOS.CHECKSUM-KEY`
 
 Bạn có thể map các biến này trong `application.properties` hoặc tạo file riêng (`application-dev.properties`).
 

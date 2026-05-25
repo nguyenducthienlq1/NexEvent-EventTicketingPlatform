@@ -6,6 +6,7 @@ import com.nexevent.nexevent.domains.enums.OrderStatus;
 import com.nexevent.nexevent.services.OrderService;
 import com.nexevent.nexevent.services.PaymentSseService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +36,10 @@ public class PaymentController {
         this.orderService = orderService;
         this.paymentSseService = paymentSseService;
     }
+
+    @Value("${nexevent.api-frontend}")
+    private String url_frontend;
+
     @PostMapping("/create-payment-link/{orderId}")
     public ResponseEntity<RestResponse<Object>> createPaymentLink(@PathVariable Long orderId) {
         try {
@@ -52,8 +57,8 @@ public class PaymentController {
                     .orderCode(order.get().getId())
                     .amount(order.get().getTotalAmount().longValue())
                     .description("Thanh toán đơn hàng " + order.get().getOrderCode())
-                    .cancelUrl("http://localhost:5174/cancel")
-                    .returnUrl("http://localhost:5174/success")
+                    .cancelUrl(url_frontend + "/cancel")
+                    .returnUrl(url_frontend + "/success")
                     .item(item)
                     .build();
 
