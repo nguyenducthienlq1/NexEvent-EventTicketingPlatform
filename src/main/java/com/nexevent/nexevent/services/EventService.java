@@ -15,8 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,11 +42,14 @@ public class EventService {
     }
     @Transactional
     public EventResDTO createEvent(EventReqDTO dto, String adminEmail) {
+        if (dto.getStartTime().isBefore(LocalDateTime.now())){
+            throw new IdInvalidException("The start time must begin today.");
+        }
         if (dto.getStartTime().isAfter(dto.getEndTime())) {
-            throw new IdInvalidException("Thời gian bắt đầu không thể sau thời gian kết thúc!");
+            throw new IdInvalidException("The start time can't be after the end time!");
         }
         User admin = userRepository.findByEmail(adminEmail)
-                .orElseThrow(() -> new IdInvalidException("Không tìm thấy thông tin Admin"));
+                .orElseThrow(() -> new IdInvalidException("Cannot find infomation of Admin"));
         Event newEvent = Event.builder()
                 .title(dto.getTitle())
                 .description(dto.getDescription())
@@ -64,6 +67,9 @@ public class EventService {
     }
     @Transactional
     public EventResDTO updateEvent(Long eventId, EventReqDTO dto) {
+        if (dto.getStartTime().isBefore(LocalDateTime.now())){
+            throw new IdInvalidException("The start time must begin today.");
+        }
         if (dto.getStartTime().isAfter(dto.getEndTime())) {
             throw new IdInvalidException("The start time can't be after the end time!");
         }

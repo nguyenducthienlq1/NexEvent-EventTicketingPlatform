@@ -41,7 +41,7 @@ public class TicketTypeController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
         return ResponseEntity.ok().body(ticketTypeService.getActiveTicketsByEvent(eventId, pageable));
     }
-
+    
     @GetMapping("/admin/events/{eventId}/ticket-types")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ApiMessage("Lấy toàn bộ danh sách vé thành công")

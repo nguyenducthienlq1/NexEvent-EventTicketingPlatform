@@ -185,6 +185,9 @@ public class OrderService {
         if (!order.isPresent()) {
             throw new IdInvalidException("Order with id '" + idOrder + "' does not exist!");
         }
+        if (order.get().getStatus() == OrderStatus.PAID) {
+            throw new RuntimeException("This order have been paid.");
+        }
         order.get().setStatus(OrderStatus.PAID);
         orderRepository.save(order.get());
         List<Ticket> createdTicket =  ticketService.createAllTicketsOfOrder(idOrder);
@@ -197,6 +200,10 @@ public class OrderService {
                         .ticketTypeName(t.getOrderItem().getTicketType().getTitle())
                         .qrCode(t.getQrCode()).build()).toList())
                 .build();
+    }
+
+    public Optional<Order> findById(Long id){
+        return orderRepository.findById(id);
     }
     public OrderResDTO revertToResDTO(Order order) {
         return OrderResDTO

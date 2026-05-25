@@ -47,7 +47,7 @@ public class AuthController {
     @Value("${refresh_token_endpoint}")
     public String REFRESH_TOKEN_ENDPOINT;
 
-    @Value("${ducthien.jwt.refresh-token-validity-in-seconds}")
+    @Value("${jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
     @PostMapping("/register")
