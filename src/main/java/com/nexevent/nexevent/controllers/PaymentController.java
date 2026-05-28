@@ -5,9 +5,12 @@ import com.nexevent.nexevent.domains.entities.Order;
 import com.nexevent.nexevent.domains.enums.OrderStatus;
 import com.nexevent.nexevent.services.OrderService;
 import com.nexevent.nexevent.services.PaymentSseService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -22,7 +25,7 @@ import vn.payos.model.webhooks.WebhookData;
 
 import java.util.Optional;
 
-
+@Tag(name = "Payment API", description = "Các API liên quan đến thanh toán qua cổng PayOS")
 @RestController
 @RequestMapping("${nexevent.api-prefix}/payments")
 @Slf4j
@@ -40,12 +43,14 @@ public class PaymentController {
     @Value("${nexevent.api-frontend}")
     private String url_frontend;
 
+    @Operation(summary = "Tạo link thanh toán", description = "Tạo mã VietQR và link thanh toán PayOS cho một đơn hàng cụ thể. Yêu cầu quyền USER.")
+    @PreAuthorize(value="hasAuthority('USER')")
     @PostMapping("/create-payment-link/{orderId}")
     public ResponseEntity<RestResponse<Object>> createPaymentLink(@PathVariable Long orderId) {
         try {
             Optional<Order> order = orderService.findById(orderId);
             if(order.get().getStatus().equals(OrderStatus.PAID)) {
-                     throw new RuntimeException("Đơn hàng này đã được thanh toán!");
+                throw new RuntimeException("Đơn hàng này đã được thanh toán!");
             }
             PaymentLinkItem item = PaymentLinkItem.builder()
                     .name("Order #" + order.get().getOrderCode())
@@ -56,7 +61,7 @@ public class PaymentController {
             CreatePaymentLinkRequest paymentRequest = CreatePaymentLinkRequest.builder()
                     .orderCode(order.get().getId())
                     .amount(order.get().getTotalAmount().longValue())
-                    .description("Thanh toán đơn hàng " + order.get().getOrderCode())
+                    .description("Order: " + order.get().getOrderCode())
                     .cancelUrl(url_frontend + "/cancel")
                     .returnUrl(url_frontend + "/success")
                     .item(item)
@@ -77,12 +82,15 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/subscribe/{orderCode}")
-    public SseEmitter subscribePaymentEvent(@PathVariable Long orderCode) {
-        return paymentSseService.subscribe(orderCode);
+    @Operation(summary = "Đăng ký nhận kết quả thanh toán (SSE)", description = "Mở kết nối Server-Sent Events để hứng dữ liệu vé real-time ngay khi khách chuyển khoản xong.")
+    @PreAuthorize(value="hasAuthority('USER')")
+    @GetMapping("/subscribe/{orderId}")
+    public SseEmitter subscribePaymentEvent(@PathVariable Long orderId) {
+        return paymentSseService.subscribe(orderId);
     }
 
-    // 2. API HỨNG WEBHOOK (PayOS sẽ âm thầm gọi cái này khi tiền "ting ting")
+    // 2. API HỨNG WEBHOOK (PayOS sẽ âm thầm gọi cái này khi tiền được chuyển tới)
+    @Operation(summary = "Webhook PayOS (Internal)", description = "Endpoint dành riêng cho PayOS gọi về khi có biến động số dư. Không yêu cầu Token đăng nhập.")
     @PostMapping("/webhook")
     public ResponseEntity<RestResponse<Object>> handlePayOSWebhook(@RequestBody Webhook webhook) {
         RestResponse<Object> res = new RestResponse<>();
@@ -90,11 +98,19 @@ public class PaymentController {
             // QUAN TRỌNG: Xác thực chữ ký để chống bị hack/gọi fake
             WebhookData data = payOS.webhooks().verify(webhook);
             log.info("PayOS báo: Đã nhận được tiền cho mã đơn: {}", data.getOrderCode());
-            ResOrderPaidDTO orderPaidInfo = orderService.processPayment(data.getOrderCode());
+//            ResOrderPaidDTO orderPaidInfo = orderService.processPayment(data.getOrderCode());
+            try {
+                ResOrderPaidDTO orderPaidInfo = orderService.processPayment(data.getOrderCode());
+                paymentSseService.sendPaymentSuccess(data.getOrderCode(), orderPaidInfo);
+                log.info("Xử lý đơn hàng và bắn vé thành công cho đơn: {}", data.getOrderCode());
+            } catch (Exception ex) {
+                // Nếu PayOS bắn mã test (đơn 123 không tồn tại trong DB), nó sẽ văng lỗi vào đây.
+                // Ta chỉ ghi log cảnh báo chứ KHÔNG làm sập luồng chính.
+                log.warn("Bỏ qua xử lý đơn hàng {} (Khả năng cao là PayOS đang test Webhook): {}", data.getOrderCode(), ex.getMessage());
+            }
 
-
-            // 2. Bắn SSE Realtime: sseService.sendPaymentSuccessEvent(data.getOrderCode());
-            paymentSseService.sendPaymentSuccess(data.getOrderCode(), orderPaidInfo);
+            // 2. Bắn SSE Realtime
+            //paymentSseService.sendPaymentSuccess(data.getOrderCode(), orderPaidInfo);
 
             res.setStatusCode(HttpStatus.OK.value());
             res.setMessage("Webhook processed successfully");

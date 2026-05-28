@@ -90,7 +90,8 @@ public class SecurityConfig {
                                         "/v3/api-docs/**",
                                         "/swagger-ui/**",
                                         "/swagger-ui.html",
-                                        "/api/v1/auth/password/**").permitAll()
+                                        "/api/v1/auth/password/**",
+                                        "/api/v1/payments/webhook").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/events/**").permitAll()
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2 -> oauth2.jwt(Customizer.withDefaults())
