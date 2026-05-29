@@ -22,9 +22,6 @@ public class EventResDTO {
     @Schema(description = "Mô tả chi tiết về sự kiện", example = "Sự kiện âm nhạc EDM lớn nhất năm...")
     private String description;
 
-    @Schema(description = "Ngày chính thức diễn ra sự kiện", example = "2026-12-24T00:00:00")
-    private LocalDateTime date;
-
     @Schema(description = "Đường dẫn URL ảnh bìa (Cover/Banner)", example = "https://example.com/images/nexevent-edm-2026.jpg")
     private String cover;
 

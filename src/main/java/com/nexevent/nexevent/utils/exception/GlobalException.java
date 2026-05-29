@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,17 +47,17 @@ public class GlobalException {
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<RestResponse<Object>> validateException(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
-        final List<FieldError> fieldErrorList = bindingResult.getFieldErrors();
 
         RestResponse<Object> res = new RestResponse<>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        res.setError(e.getBody().getDetail());
+        res.setError("Bad Request");
 
-        List<String> errors = fieldErrorList.stream()
-                .map(FieldError::getDefaultMessage)
+        // Dùng getAllErrors() để gom sạch cả FieldError (lỗi biến) lẫn ObjectError (lỗi class)
+        List<String> errors = bindingResult.getAllErrors().stream()
+                .map(error -> error.getDefaultMessage())
                 .collect(Collectors.toList());
 
-        res.setMessage(errors); // Gửi list lỗi mượt mà
+        res.setMessage(errors); // Trả về List<String>
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
@@ -67,6 +68,15 @@ public class GlobalException {
         res.setError("404 Not Found");
         res.setMessage("Đường dẫn API không tồn tại!");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+    }
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ResponseEntity<RestResponse<Object>> handleAccessDeniedException(AccessDeniedException e) {
+        RestResponse<Object> res = new RestResponse<>();
+        res.setStatusCode(HttpStatus.FORBIDDEN.value());
+        res.setError("Forbidden");
+        res.setMessage("Bạn không có quyền truy cập vào chức năng này!");
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
     }
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<RestResponse<Object>> handleAllException(Exception e) {

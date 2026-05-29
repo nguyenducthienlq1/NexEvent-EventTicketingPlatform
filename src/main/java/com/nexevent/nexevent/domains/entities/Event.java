@@ -29,9 +29,6 @@ public class Event {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "date")
-    private LocalDateTime date;
-
     @Column(name = "cover")
     private String cover;
 

@@ -28,10 +28,8 @@ public class TicketTypeService {
         if (dto.getStartTime().isAfter(dto.getEndTime())) {
             throw new IdInvalidException("The opening time for sales cannot be after the closing time.!");
         }
-
         Event event = eventRepository.findById(dto.getEventId())
                 .orElseThrow(() -> new IdInvalidException("Cannot find Event have ID: " + dto.getEventId()));
-
         TicketType newTicket = TicketType.builder()
                 .event(event)
                 .title(dto.getTitle())
@@ -51,7 +49,6 @@ public class TicketTypeService {
     public TicketTypeResDTO updateTicketType(Long id, TicketTypeReqDTO dto){
         TicketType ticket = ticketTypeRepository.findById(id)
                 .orElseThrow(() -> new IdInvalidException("Cannot find TicketType have ID: " + id));
-
         if (dto.getTotalQuantity() < ticket.getSoldQuantity()) {
             throw new IdInvalidException("The total number cannot be less than the number of tickets sold (" + ticket.getSoldQuantity() + ")");
         }

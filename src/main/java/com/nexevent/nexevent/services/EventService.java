@@ -42,18 +42,11 @@ public class EventService {
     }
     @Transactional
     public EventResDTO createEvent(EventReqDTO dto, String adminEmail) {
-        if (dto.getStartTime().isBefore(LocalDateTime.now())){
-            throw new IdInvalidException("The start time must begin today.");
-        }
-        if (dto.getStartTime().isAfter(dto.getEndTime())) {
-            throw new IdInvalidException("The start time can't be after the end time!");
-        }
         User admin = userRepository.findByEmail(adminEmail)
                 .orElseThrow(() -> new IdInvalidException("Cannot find infomation of Admin"));
         Event newEvent = Event.builder()
                 .title(dto.getTitle())
                 .description(dto.getDescription())
-                .date(dto.getDate())
                 .cover(dto.getCover())
                 .location(dto.getLocation())
                 .startTime(dto.getStartTime())
@@ -67,23 +60,14 @@ public class EventService {
     }
     @Transactional
     public EventResDTO updateEvent(Long eventId, EventReqDTO dto) {
-        if (dto.getStartTime().isBefore(LocalDateTime.now())){
-            throw new IdInvalidException("The start time must begin today.");
-        }
-        if (dto.getStartTime().isAfter(dto.getEndTime())) {
-            throw new IdInvalidException("The start time can't be after the end time!");
-        }
-
         Event currentEvent = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IdInvalidException("Can't find the event with ID: " + eventId));
 
         if (currentEvent.getCover() != null && !currentEvent.getCover().equals(dto.getCover())) {
             cloudinaryService.deleteImageByUrl(currentEvent.getCover());
         }
-
         currentEvent.setTitle(dto.getTitle());
         currentEvent.setDescription(dto.getDescription());
-        currentEvent.setDate(dto.getDate());
         currentEvent.setCover(dto.getCover());
         currentEvent.setLocation(dto.getLocation());
         currentEvent.setStartTime(dto.getStartTime());
@@ -122,7 +106,6 @@ public class EventService {
                 .id(event.getId())
                 .title(event.getTitle())
                 .description(event.getDescription())
-                .date(event.getDate())
                 .cover(event.getCover())
                 .location(event.getLocation())
                 .startTime(event.getStartTime())
