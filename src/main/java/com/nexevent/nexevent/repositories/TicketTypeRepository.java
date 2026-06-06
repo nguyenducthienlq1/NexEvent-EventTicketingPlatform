@@ -3,13 +3,16 @@ package com.nexevent.nexevent.repositories;
 import com.nexevent.nexevent.domains.entities.TicketType;
 import com.nexevent.nexevent.domains.enums.StatusTicketType;
 import io.lettuce.core.dynamic.annotation.Param;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -21,4 +24,8 @@ public interface TicketTypeRepository extends JpaRepository<TicketType, Long> {
 
     @Query("SELECT t FROM TicketType t JOIN FETCH t.event WHERE t.id IN :ids")
     List<TicketType> findTicketsWithEventByIds(@Param("ids") Set<Long> ids);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT t FROM TicketType t JOIN FETCH t.event WHERE t.id = :id")
+    Optional<TicketType> findByIdWithLock(@Param("id") Long id);
 }

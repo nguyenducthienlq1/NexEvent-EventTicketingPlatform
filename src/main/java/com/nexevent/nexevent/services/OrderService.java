@@ -90,15 +90,6 @@ public class OrderService {
                             Collectors.summingInt(OrderItemReqDTO::getQuantity)
                     ));
 
-            // Lấy các loại vé (TicketType)
-            List<TicketType> ticketTypes = ticketTypeRepository.findTicketsWithEventByIds(ticketQuantityMap.keySet());
-            if (ticketTypes.size() != ticketQuantityMap.size()) {
-                throw new IdInvalidException("Some ticket types don't exist in the system!");
-            }
-
-            Map<Long, TicketType> ticketTypeMap = ticketTypes.stream()
-                    .collect(Collectors.toMap(TicketType::getId, t -> t));
-
             Order newOrder = Order.builder()
                     .user(user)
                     .orderCode(generateOrderCode())
@@ -112,9 +103,9 @@ public class OrderService {
             LocalDateTime now = LocalDateTime.now();
 
             for (Map.Entry<Long, Integer> entry : ticketQuantityMap.entrySet()) {
-                Long ticketId = entry.getKey();
                 Integer quantityToBuy = entry.getValue();
-                TicketType ticketType = ticketTypeMap.get(ticketId);
+                TicketType ticketType = ticketTypeRepository.findByIdWithLock(entry.getKey())
+                        .orElseThrow(() -> new IdInvalidException("Ticket not found"));
 
                 if (ticketType.getStatus() != StatusTicketType.AVAILABLE) {
                     throw new IdInvalidException("Ticket '" + ticketType.getTitle() + "' is currently unavailable for sale.");

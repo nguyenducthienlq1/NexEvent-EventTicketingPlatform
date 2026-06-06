@@ -31,7 +31,6 @@ public class TicketTypeControllerTest extends BaseIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    // Khởi tạo ObjectMapper có hỗ trợ Java 8 Time Module
     private ObjectMapper objectMapper = new ObjectMapper().registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
 
     @Autowired
@@ -72,13 +71,11 @@ public class TicketTypeControllerTest extends BaseIntegrationTest {
         Event savedEvent = eventRepository.save(event);
         this.savedEventId = savedEvent.getId();
 
-        // 3. Mồi 1 TicketType có sẵn gắn vào Event trên
         TicketType ticketType = new TicketType();
         ticketType.setTitle("Vé GA (Đứng)");
         ticketType.setPrice(new BigDecimal("700000"));
         ticketType.setTotalQuantity(1000);
         ticketType.setSoldQuantity(0);
-        // Vé đang mở bán
         ticketType.setStartTime(LocalDateTime.now().minusDays(1));
         ticketType.setEndTime(LocalDateTime.now().plusDays(10));
         ticketType.setStatus(StatusTicketType.AVAILABLE);
@@ -221,7 +218,6 @@ public class TicketTypeControllerTest extends BaseIntegrationTest {
         TicketType deletedType = ticketTypeRepository.findById(savedTicketTypeId).get();
         assertEquals(StatusTicketType.UNAVAILABE, deletedType.getStatus(), "Lỗi: Trạng thái vé chưa chuyển sang INACTIVE!");
 
-        // Cú chốt: Đảm bảo vé UNAVAILABE không bị lòi ra ở API Public
         mockMvc.perform(get("/api/v1/events/" + savedEventId + "/ticket-types")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
