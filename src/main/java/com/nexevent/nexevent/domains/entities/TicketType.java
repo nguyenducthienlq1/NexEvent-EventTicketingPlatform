@@ -48,6 +48,4 @@ public class TicketType {
     @Enumerated(EnumType.STRING)
     private StatusTicketType status;
 
-//    @Version
-//    private Long version;
 }
