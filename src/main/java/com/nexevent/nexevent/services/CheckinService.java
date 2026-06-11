@@ -4,6 +4,7 @@ import com.nexevent.nexevent.domains.dto.request.TicketCheckInReqDTO;
 import com.nexevent.nexevent.domains.dto.response.ResLiveCheckinDTO;
 import com.nexevent.nexevent.domains.dto.response.ResTicketCheckInDTO;
 import com.nexevent.nexevent.domains.entities.Checkin;
+import com.nexevent.nexevent.domains.entities.Event;
 import com.nexevent.nexevent.domains.entities.Ticket;
 import com.nexevent.nexevent.domains.entities.User;
 import com.nexevent.nexevent.domains.enums.StatusTicket;
@@ -13,6 +14,7 @@ import com.nexevent.nexevent.utils.TicketQrUtil;
 import com.nexevent.nexevent.utils.exception.IdInvalidException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -54,6 +56,11 @@ public class CheckinService {
         }
         if (ticket.get().getStatus() == StatusTicket.USED){
             throw new IdInvalidException("Ticket is already used");
+        }
+        LocalDateTime now = LocalDateTime.now();
+        Event event = ticket.get().getOrderItem().getTicketType().getEvent();
+        if (event.getEndTime() != null && now.isAfter(event.getEndTime())) {
+            throw new IdInvalidException("This event has already ended. Check-in closed!");
         }
         // Tất cả hợp lệ
         //Đánh dấu vé đã sử dụng

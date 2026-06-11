@@ -188,7 +188,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
     }
 
     // =========================================================================
-    // PHẦN 2: ĐỒNG THỜI (CONCURRENCY) - TRẬN CHIẾN TRANH GIÀNH VÉ CUỐI CÙNG
+    // PHẦN 2: ĐỒNG THỜI (CONCURRENCY)
     // =========================================================================
 
     @Test
@@ -234,10 +234,7 @@ public class OrderControllerTest extends BaseIntegrationTest {
                 try {
                     startLatch.await(); // Chờ súng lệnh
 
-                    // GIẢI PHÁP AN TOÀN: Dùng hẳn đường dẫn động từ cấu hình (apiPrefix) nếu có,
-                    // Hoặc tạm thời dùng đúng chuỗi mapping để tránh 404.
                     MvcResult result = mockMvc.perform(post("/api/v1/orders")
-                                    // Thay vì .user(), ta dùng bộ giả lập MockUser chuẩn chỉ hơn để ép ép luồng nhận dạng
                                     .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.securityContext(
                                             org.springframework.security.core.context.SecurityContextHolder.createEmptyContext()
                                     ))
@@ -249,7 +246,6 @@ public class OrderControllerTest extends BaseIntegrationTest {
                     int httpStatus = result.getResponse().getStatus();
                     String responseBody = result.getResponse().getContentAsString();
 
-                    // Lệnh debug tối thượng: In ra để xem luồng con đang trả về 201, 400, 401 hay 404!
                     System.out.println(">>>  DEBUG - Luồng của " + currentUserEmail + " trả về Status: " + httpStatus + " | Body: " + responseBody);
 
                     if (httpStatus == 201) {
