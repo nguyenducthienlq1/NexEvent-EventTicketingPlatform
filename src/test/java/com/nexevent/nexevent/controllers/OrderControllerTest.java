@@ -275,4 +275,72 @@ public class OrderControllerTest extends BaseIntegrationTest {
         TicketType dbTicketCheck = ticketTypeRepository.findById(normalTicketType.getId()).get();
         assertEquals(100, dbTicketCheck.getSoldQuantity(), "Data Integrity Error: Số lượng bán ra dưới DB bị sai lệch!");
     }
+
+    // =========================================================================
+    // PHẦN 3: TEST REDIS DISTRIBUTED LOCK (CHỐNG SPAM CLICK)
+    // =========================================================================
+
+    @Test
+    @DisplayName("Redis Lock: Một người dùng click mua nhanh 2 lần cùng lúc, hệ thống chỉ chấp nhận 1 đơn")
+    void testConcurrent_SpamClickSameUser_BlockedByRedisLock() throws Exception {
+        int numberOfParallelRequests = 2; // 2 request đồng thời từ CÙNG 1 người dùng
+        ExecutorService executorService = Executors.newFixedThreadPool(numberOfParallelRequests);
+        CountDownLatch startLatch = new CountDownLatch(1);
+        CountDownLatch doneLatch = new CountDownLatch(numberOfParallelRequests);
+
+        AtomicInteger successCounter = new AtomicInteger(0);
+        AtomicInteger failCounter = new AtomicInteger(0);
+        AtomicInteger redisLockBlockCounter = new AtomicInteger(0);
+
+        OrderItemReqDTO itemDTO = new OrderItemReqDTO();
+        itemDTO.setTicketTypeId(normalTicketType.getId());
+        itemDTO.setQuantity(1);
+
+        OrderReqDTO reqDTO = new OrderReqDTO();
+        reqDTO.setItems(Collections.singletonList(itemDTO));
+        String jsonPayload = objectMapper.writeValueAsString(reqDTO);
+
+        // Kích hoạt 2 luồng bắn phá đồng thời, dùng chung tài khoản buyer@gmail.com
+        for (int i = 0; i < numberOfParallelRequests; i++) {
+            executorService.execute(() -> {
+                try {
+                    startLatch.await(); // Đứng chờ súng lệnh
+
+                    MvcResult result = mockMvc.perform(post("/api/v1/orders")
+                                    .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.securityContext(
+                                            org.springframework.security.core.context.SecurityContextHolder.createEmptyContext()
+                                    ))
+                                    .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("buyer@gmail.com").authorities(new org.springframework.security.core.authority.SimpleGrantedAuthority("USER")))
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(jsonPayload))
+                            .andReturn();
+
+                    int httpStatus = result.getResponse().getStatus();
+                    String responseBody = result.getResponse().getContentAsString();
+
+                    if (httpStatus == 201) {
+                        successCounter.incrementAndGet();
+                    } else {
+                        failCounter.incrementAndGet();
+                        if (responseBody.contains("You're working too fast!")) {
+                            redisLockBlockCounter.incrementAndGet();
+                        }
+                    }
+                } catch (Exception e) {
+                    failCounter.incrementAndGet();
+                } finally {
+                    doneLatch.countDown();
+                }
+            });
+        }
+
+        startLatch.countDown(); // BẮN SÚNG LỆNH!
+        doneLatch.await();
+
+        // CHỐT HẠ KIỂM TRA CHẤT LƯỢNG LOCK
+        // Do dùng chung 1 User, bắt buộc chỉ có 1 request được xử lý thành công, request kia bị block ngay lập tức
+        assertEquals(1, successCounter.get(), "LỖI: Đáng lẽ chỉ được có duy nhất 1 đơn hàng tạo thành công!");
+        assertEquals(1, failCounter.get(), "LỖI: Request spam thứ hai đã không bị chặn lại!");
+        assertEquals(1, redisLockBlockCounter.get(), "LỖI: Request bị chặn không phải do Redis Distributed Lock trả về!");
+    }
 }
