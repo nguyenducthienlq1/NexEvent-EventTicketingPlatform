@@ -1,0 +1,3443 @@
+{
+  "info": {
+    "_postman_id": "5a00ffbb-52dd-4165-811a-3aaae024c556",
+    "name": "NexEvent API Documentation",
+    "description": "Tài liệu API cho hệ thống bán vé sự kiện NexEvent",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "36970837"
+  },
+  "item": [
+    {
+      "name": "api",
+      "item": [
+        {
+          "name": "v1",
+          "item": [
+            {
+              "name": "ticket-types",
+              "item": [
+                {
+                  "name": "{id}",
+                  "item": [
+                    {
+                      "name": "Cập nhật loại vé (Admin)",
+                      "request": {
+                        "method": "PUT",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"endTime\": \"2026-12-23T23:59:59\",\n  \"eventId\": 1,\n  \"price\": 1500000,\n  \"startTime\": \"2026-10-01T08:00:00\",\n  \"title\": \"Vé VIP (Sát sân khấu)\",\n  \"totalQuantity\": 500,\n  \"description\": \"- Được giao lưu cùng thần tượng\\n- Tặng 1 lightstick\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/ticket-types/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "ticket-types",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "9153"
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "PUT",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"endTime\": \"2026-12-23T23:59:59\",\n  \"eventId\": 1,\n  \"price\": 1500000,\n  \"startTime\": \"2026-10-01T08:00:00\",\n  \"title\": \"Vé VIP (Sát sân khấu)\",\n  \"totalQuantity\": 500,\n  \"description\": \"- Được giao lưu cùng thần tượng\\n- Tặng 1 lightstick\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/ticket-types/:id",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "ticket-types",
+                                ":id"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id",
+                                  "value": "9153"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"id\": 7251,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"price\": 8875.041348527382,\n  \"totalQuantity\": 2750,\n  \"soldQuantity\": 8523,\n  \"remainQuantity\": 2099,\n  \"startTime\": \"1952-10-21T17:03:31.260Z\",\n  \"endTime\": \"1980-11-02T08:09:02.831Z\",\n  \"status\": \"AVAILABLE\"\n}"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Hủy bán loại vé (Admin)",
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/ticket-types/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "ticket-types",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "9153"
+                            }
+                          ]
+                        },
+                        "description": "Soft delete: Chuyển trạng thái vé thành INACTIVE"
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "DELETE",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/ticket-types/:id",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "ticket-types",
+                                ":id"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id",
+                                  "value": "9153"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "body": ""
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Tạo loại vé (Admin)",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"endTime\": \"2026-12-23T23:59:59\",\n  \"eventId\": 1,\n  \"price\": 1500000,\n  \"startTime\": \"2026-10-01T08:00:00\",\n  \"title\": \"Vé VIP (Sát sân khấu)\",\n  \"totalQuantity\": 500,\n  \"description\": \"- Được giao lưu cùng thần tượng\\n- Tặng 1 lightstick\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/ticket-types",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "ticket-types"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"endTime\": \"2026-12-23T23:59:59\",\n  \"eventId\": 1,\n  \"price\": 1500000,\n  \"startTime\": \"2026-10-01T08:00:00\",\n  \"title\": \"Vé VIP (Sát sân khấu)\",\n  \"totalQuantity\": 500,\n  \"description\": \"- Được giao lưu cùng thần tượng\\n- Tặng 1 lightstick\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/ticket-types",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "ticket-types"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "*/*"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"id\": 7251,\n  \"title\": \"string\",\n  \"description\": \"string\",\n  \"price\": 8875.041348527382,\n  \"totalQuantity\": 2750,\n  \"soldQuantity\": 8523,\n  \"remainQuantity\": 2099,\n  \"startTime\": \"1952-10-21T17:03:31.260Z\",\n  \"endTime\": \"1980-11-02T08:09:02.831Z\",\n  \"status\": \"AVAILABLE\"\n}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "orders",
+              "item": [
+                {
+                  "name": "{idOrder}",
+                  "item": [
+                    {
+                      "name": "complete",
+                      "item": [
+                        {
+                          "name": "Hoàn tất Order",
+                          "request": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/orders/:idOrder/complete",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "orders",
+                                ":idOrder",
+                                "complete"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "idOrder",
+                                  "value": "9153"
+                                }
+                              ]
+                            },
+                            "description": "User thanh toán Order đang Pending"
+                          },
+                          "response": [
+                            {
+                              "name": "OK",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Accept",
+                                    "value": "*/*"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/orders/:idOrder/complete",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "orders",
+                                    ":idOrder",
+                                    "complete"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "idOrder",
+                                      "value": "9153"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "OK",
+                              "code": 200,
+                              "_postman_previewlanguage": "text",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "*/*"
+                                }
+                              ],
+                              "cookie": [],
+                              "body": "{\n  \"orderCode\": \"string\",\n  \"status\": \"string\",\n  \"totalTicketsGenerated\": 201,\n  \"tickets\": [\n    {\n      \"id\": \"string\",\n      \"ticketTypeName\": \"string\",\n      \"qrCode\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"ticketTypeName\": \"string\",\n      \"qrCode\": \"string\"\n    }\n  ]\n}"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Hủy đơn",
+                      "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/orders/:idOrder",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "orders",
+                            ":idOrder"
+                          ],
+                          "variable": [
+                            {
+                              "key": "idOrder",
+                              "value": "9153"
+                            }
+                          ]
+                        },
+                        "description": "User hủy đơn đặt hàng"
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "PATCH",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/orders/:idOrder",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "orders",
+                                ":idOrder"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "idOrder",
+                                  "value": "9153"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "body": ""
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Đặt vé (Checkout)",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"items\": [\n    {\n      \"quantity\": 7084,\n      \"ticketTypeId\": 5286\n    }\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/orders",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "orders"
+                      ]
+                    },
+                    "description": "User gửi danh sách vé muốn mua để tạo đơn hàng"
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"items\": [\n    {\n      \"quantity\": 7084,\n      \"ticketTypeId\": 5286\n    }\n  ]\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/orders",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "orders"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "*/*"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"id\": 1133,\n  \"orderCode\": \"string\",\n  \"totalAmount\": 7969.694272698174,\n  \"status\": \"CANCELLED\",\n  \"createdAt\": \"1957-12-10T11:49:15.304Z\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "Đặt vé (Checkout) - TH chưa thanh toán Order trước",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Kịch bản 6 - Status code phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Kịch bản 6 - Hệ thống chặn và ném đúng lỗi nghiệp vụ đơn hàng tồn đọng\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message[0]).to.include(\"You have an outstanding order\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"items\": [\n    {\n      \"quantity\": 7084,\n      \"ticketTypeId\": 5286\n    }\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/orders",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "orders"
+                      ]
+                    },
+                    "description": "User gửi danh sách vé muốn mua để tạo đơn hàng"
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"items\": [\n    {\n      \"quantity\": 7084,\n      \"ticketTypeId\": 5286\n    }\n  ]\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/orders",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "orders"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "*/*"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"id\": 1133,\n  \"orderCode\": \"string\",\n  \"totalAmount\": 7969.694272698174,\n  \"status\": \"CANCELLED\",\n  \"createdAt\": \"1957-12-10T11:49:15.304Z\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "Đặt vé (Checkout) - TH mua quá số lượng còn lại",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Kịch bản 5 - Status code phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Kịch bản 5 - Hệ thống chặn và ném đúng thông báo lỗi nghiệp vụ\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message).to.include(\"Not enough tickets available\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"items\": [\n    {\n      \"quantity\": 2,\n      \"ticketTypeId\": 4\n    }\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/orders",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "orders"
+                      ]
+                    },
+                    "description": "User gửi danh sách vé muốn mua để tạo đơn hàng"
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"items\": [\n    {\n      \"quantity\": 7084,\n      \"ticketTypeId\": 5286\n    }\n  ]\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/orders",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "orders"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "*/*"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"id\": 1133,\n  \"orderCode\": \"string\",\n  \"totalAmount\": 7969.694272698174,\n  \"status\": \"CANCELLED\",\n  \"createdAt\": \"1957-12-10T11:49:15.304Z\"\n}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "files",
+              "item": [
+                {
+                  "name": "upload",
+                  "item": [
+                    {
+                      "name": "Upload hình ảnh",
+                      "request": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "multipart/form-data"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "body": {
+                          "mode": "formdata",
+                          "formdata": [
+                            {
+                              "description": "File ảnh cần upload",
+                              "key": "file",
+                              "type": "file",
+                              "value": null
+                            }
+                          ]
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/files/upload?folder=nexevent/events",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "files",
+                            "upload"
+                          ],
+                          "query": [
+                            {
+                              "key": "folder",
+                              "value": "nexevent/events",
+                              "description": "Tên thư mục lưu trên Cloudinary (VD: nexevent/events, nexevent/users)"
+                            }
+                          ]
+                        },
+                        "description": "Tải một file hình ảnh lên Cloudinary và nhận lại URL. Nếu không truyền folder, ảnh sẽ tự động lưu vào nexevent/others."
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "multipart/form-data"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "formdata",
+                              "formdata": [
+                                {
+                                  "description": "File ảnh cần upload",
+                                  "key": "file",
+                                  "type": "file",
+                                  "src": []
+                                }
+                              ]
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/files/upload?folder=nexevent/events",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "files",
+                                "upload"
+                              ],
+                              "query": [
+                                {
+                                  "description": "Tên thư mục lưu trên Cloudinary (VD: nexevent/events, nexevent/users)",
+                                  "key": "folder",
+                                  "value": "nexevent/events"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"statusCode\": 1313,\n  \"error\": \"string\",\n  \"message\": \"\",\n  \"data\": \"string\"\n}"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "delete",
+                  "item": [
+                    {
+                      "name": "Xóa hình ảnh",
+                      "request": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/files/delete?url=string",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "files",
+                            "delete"
+                          ],
+                          "query": [
+                            {
+                              "key": "url",
+                              "value": "string",
+                              "description": "Đường dẫn (URL) của ảnh trên Cloudinary cần xóa"
+                            }
+                          ]
+                        },
+                        "description": "API dành cho Frontend dọn rác nếu tạo Event lỗi, hoặc dùng để xóa ảnh thủ công."
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "DELETE",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/files/delete?url=string",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "files",
+                                "delete"
+                              ],
+                              "query": [
+                                {
+                                  "description": "Đường dẫn (URL) của ảnh trên Cloudinary cần xóa",
+                                  "key": "url",
+                                  "value": "string"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"statusCode\": 4300,\n  \"error\": \"string\",\n  \"message\": \"\",\n  \"data\": \"\"\n}"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "events",
+              "item": [
+                {
+                  "name": "{id}",
+                  "item": [
+                    {
+                      "name": "Lấy chi tiết 1 sự kiện",
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/events/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "events",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "9153"
+                            }
+                          ]
+                        },
+                        "description": "Xem chi tiết thông tin của 1 sự kiện bằng ID"
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/events/:id",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "events",
+                                ":id"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id",
+                                  "value": "9153"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"id\": 101,\n  \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n  \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm...\",\n  \"date\": \"2026-12-24T00:00:00\",\n  \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\",\n  \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n  \"startTime\": \"2026-12-24T18:00:00\",\n  \"endTime\": \"2026-12-24T23:30:00\",\n  \"active\": true,\n  \"organizerName\": \"Nguyễn Đức Thiện\"\n}"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Xóa sự kiện (ADMIN)",
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/events/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "events",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "9153"
+                            }
+                          ]
+                        },
+                        "description": "Hủy (Soft-delete) một sự kiện khỏi hệ thống"
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "DELETE",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/events/:id",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "events",
+                                ":id"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id",
+                                  "value": "9153"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "body": ""
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Cập nhật sự kiện (ADMIN)",
+                      "request": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"date\": \"2026-12-24T00:00:00\",\n  \"endTime\": \"2026-12-24T23:30:00\",\n  \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n  \"startTime\": \"2026-12-24T18:00:00\",\n  \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n  \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm với sự góp mặt của các DJ hàng đầu thế giới.\",\n  \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/events/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "events",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id",
+                              "value": "9153"
+                            }
+                          ]
+                        },
+                        "description": "Chỉnh sửa thông tin sự kiện"
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "PATCH",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"date\": \"2026-12-24T00:00:00\",\n  \"endTime\": \"2026-12-24T23:30:00\",\n  \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n  \"startTime\": \"2026-12-24T18:00:00\",\n  \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n  \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm với sự góp mặt của các DJ hàng đầu thế giới.\",\n  \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/events/:id",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "events",
+                                ":id"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id",
+                                  "value": "9153"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"id\": 101,\n  \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n  \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm...\",\n  \"date\": \"2026-12-24T00:00:00\",\n  \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\",\n  \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n  \"startTime\": \"2026-12-24T18:00:00\",\n  \"endTime\": \"2026-12-24T23:30:00\",\n  \"active\": true,\n  \"organizerName\": \"Nguyễn Đức Thiện\"\n}"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "{eventId}",
+                  "item": [
+                    {
+                      "name": "ticket-types",
+                      "item": [
+                        {
+                          "name": "Xem vé sự kiện (Public)",
+                          "request": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/events/:eventId/ticket-types?page=0&size=10&sortBy=id",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "events",
+                                ":eventId",
+                                "ticket-types"
+                              ],
+                              "query": [
+                                {
+                                  "key": "page",
+                                  "value": "0"
+                                },
+                                {
+                                  "key": "size",
+                                  "value": "10"
+                                },
+                                {
+                                  "key": "sortBy",
+                                  "value": "id"
+                                }
+                              ],
+                              "variable": [
+                                {
+                                  "key": "eventId",
+                                  "value": "9153"
+                                }
+                              ]
+                            },
+                            "description": "Lấy danh sách các loại vé ĐANG MỞ BÁN của 1 sự kiện (Có phân trang)"
+                          },
+                          "response": [
+                            {
+                              "name": "OK",
+                              "originalRequest": {
+                                "method": "GET",
+                                "header": [
+                                  {
+                                    "key": "Accept",
+                                    "value": "*/*"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/events/:eventId/ticket-types?page=0&size=10&sortBy=id",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "events",
+                                    ":eventId",
+                                    "ticket-types"
+                                  ],
+                                  "query": [
+                                    {
+                                      "key": "page",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "key": "size",
+                                      "value": "10"
+                                    },
+                                    {
+                                      "key": "sortBy",
+                                      "value": "id"
+                                    }
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "eventId",
+                                      "value": "9153"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "OK",
+                              "code": 200,
+                              "_postman_previewlanguage": "text",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "*/*"
+                                }
+                              ],
+                              "cookie": [],
+                              "body": "{\n  \"totalElements\": 6305,\n  \"totalPages\": 2661,\n  \"size\": 8691,\n  \"content\": [\n    {\n      \"id\": 2504,\n      \"title\": \"string\",\n      \"description\": \"string\",\n      \"price\": 6628.809208442644,\n      \"totalQuantity\": 821,\n      \"soldQuantity\": 2266,\n      \"remainQuantity\": 2702,\n      \"startTime\": \"2012-03-29T09:41:29.702Z\",\n      \"endTime\": \"1995-04-19T18:04:00.240Z\",\n      \"status\": \"AVAILABLE\"\n    },\n    {\n      \"id\": 6417,\n      \"title\": \"string\",\n      \"description\": \"string\",\n      \"price\": 3017.28147697486,\n      \"totalQuantity\": 9581,\n      \"soldQuantity\": 7486,\n      \"remainQuantity\": 5032,\n      \"startTime\": \"2010-04-03T07:43:51.374Z\",\n      \"endTime\": \"2013-09-09T19:56:13.689Z\",\n      \"status\": \"SOLD_OUT\"\n    }\n  ],\n  \"number\": 9421,\n  \"sort\": {\n    \"empty\": true,\n    \"sorted\": false,\n    \"unsorted\": true\n  },\n  \"first\": false,\n  \"last\": true,\n  \"numberOfElements\": 7724,\n  \"pageable\": {\n    \"offset\": 8464,\n    \"sort\": {\n      \"empty\": false,\n      \"sorted\": true,\n      \"unsorted\": false\n    },\n    \"paged\": true,\n    \"pageSize\": 938,\n    \"pageNumber\": 3467,\n    \"unpaged\": false\n  },\n  \"empty\": false\n}"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "search",
+                  "item": [
+                    {
+                      "name": "Tìm kiếm sự kiện",
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/events/search?keyword=string&page=0&size=10",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "events",
+                            "search"
+                          ],
+                          "query": [
+                            {
+                              "key": "keyword",
+                              "value": "string"
+                            },
+                            {
+                              "key": "page",
+                              "value": "0"
+                            },
+                            {
+                              "key": "size",
+                              "value": "10"
+                            }
+                          ]
+                        },
+                        "description": "Tìm kiếm sự kiện theo tiêu đề"
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/events/search?keyword=string&page=0&size=10",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "events",
+                                "search"
+                              ],
+                              "query": [
+                                {
+                                  "key": "keyword",
+                                  "value": "string"
+                                },
+                                {
+                                  "key": "page",
+                                  "value": "0"
+                                },
+                                {
+                                  "key": "size",
+                                  "value": "10"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"totalElements\": 9770,\n  \"totalPages\": 6593,\n  \"size\": 3838,\n  \"content\": [\n    {\n      \"id\": 101,\n      \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n      \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm...\",\n      \"date\": \"2026-12-24T00:00:00\",\n      \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\",\n      \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n      \"startTime\": \"2026-12-24T18:00:00\",\n      \"endTime\": \"2026-12-24T23:30:00\",\n      \"active\": true,\n      \"organizerName\": \"Nguyễn Đức Thiện\"\n    },\n    {\n      \"id\": 101,\n      \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n      \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm...\",\n      \"date\": \"2026-12-24T00:00:00\",\n      \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\",\n      \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n      \"startTime\": \"2026-12-24T18:00:00\",\n      \"endTime\": \"2026-12-24T23:30:00\",\n      \"active\": true,\n      \"organizerName\": \"Nguyễn Đức Thiện\"\n    }\n  ],\n  \"number\": 240,\n  \"sort\": {\n    \"empty\": true,\n    \"sorted\": false,\n    \"unsorted\": true\n  },\n  \"first\": true,\n  \"last\": false,\n  \"numberOfElements\": 7023,\n  \"pageable\": {\n    \"offset\": 1923,\n    \"sort\": {\n      \"empty\": false,\n      \"sorted\": false,\n      \"unsorted\": true\n    },\n    \"paged\": true,\n    \"pageSize\": 3705,\n    \"pageNumber\": 292,\n    \"unpaged\": true\n  },\n  \"empty\": true\n}"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Lấy tất cả sự kiện",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/events?page=0&size=10&sortBy=createdAt",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "events"
+                      ],
+                      "query": [
+                        {
+                          "key": "page",
+                          "value": "0"
+                        },
+                        {
+                          "key": "size",
+                          "value": "10"
+                        },
+                        {
+                          "key": "sortBy",
+                          "value": "createdAt"
+                        }
+                      ]
+                    },
+                    "description": "Lấy danh sách sự kiện đang mở bán (có phân trang)"
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/events?page=0&size=10&sortBy=createdAt",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "events"
+                          ],
+                          "query": [
+                            {
+                              "key": "page",
+                              "value": "0"
+                            },
+                            {
+                              "key": "size",
+                              "value": "10"
+                            },
+                            {
+                              "key": "sortBy",
+                              "value": "createdAt"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "*/*"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"totalElements\": 9770,\n  \"totalPages\": 6593,\n  \"size\": 3838,\n  \"content\": [\n    {\n      \"id\": 101,\n      \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n      \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm...\",\n      \"date\": \"2026-12-24T00:00:00\",\n      \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\",\n      \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n      \"startTime\": \"2026-12-24T18:00:00\",\n      \"endTime\": \"2026-12-24T23:30:00\",\n      \"active\": true,\n      \"organizerName\": \"Nguyễn Đức Thiện\"\n    },\n    {\n      \"id\": 101,\n      \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n      \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm...\",\n      \"date\": \"2026-12-24T00:00:00\",\n      \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\",\n      \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n      \"startTime\": \"2026-12-24T18:00:00\",\n      \"endTime\": \"2026-12-24T23:30:00\",\n      \"active\": true,\n      \"organizerName\": \"Nguyễn Đức Thiện\"\n    }\n  ],\n  \"number\": 240,\n  \"sort\": {\n    \"empty\": true,\n    \"sorted\": false,\n    \"unsorted\": true\n  },\n  \"first\": true,\n  \"last\": false,\n  \"numberOfElements\": 7023,\n  \"pageable\": {\n    \"offset\": 1923,\n    \"sort\": {\n      \"empty\": false,\n      \"sorted\": false,\n      \"unsorted\": true\n    },\n    \"paged\": true,\n    \"pageSize\": 3705,\n    \"pageNumber\": 292,\n    \"unpaged\": true\n  },\n  \"empty\": true\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "Tạo sự kiện mới (ADMIN)",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"date\": \"2026-12-24T00:00:00\",\n  \"endTime\": \"2026-12-24T23:30:00\",\n  \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n  \"startTime\": \"2026-12-24T18:00:00\",\n  \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n  \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm với sự góp mặt của các DJ hàng đầu thế giới.\",\n  \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/events",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "events"
+                      ]
+                    },
+                    "description": "Thêm mới một sự kiện vào hệ thống"
+                  },
+                  "response": [
+                    {
+                      "name": "Sự kiện được tạo thành công",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"date\": \"2026-12-24T00:00:00\",\n  \"endTime\": \"2026-12-24T23:30:00\",\n  \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n  \"startTime\": \"2026-12-24T18:00:00\",\n  \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n  \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm với sự góp mặt của các DJ hàng đầu thế giới.\",\n  \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/events",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "events"
+                          ]
+                        }
+                      },
+                      "status": "Created",
+                      "code": 201,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "*/*"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"id\": 101,\n  \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n  \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm...\",\n  \"date\": \"2026-12-24T00:00:00\",\n  \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\",\n  \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n  \"startTime\": \"2026-12-24T18:00:00\",\n  \"endTime\": \"2026-12-24T23:30:00\",\n  \"active\": true,\n  \"organizerName\": \"Nguyễn Đức Thiện\"\n}"
+                    },
+                    {
+                      "name": "Dữ liệu không hợp lệ (thời gian sai, thiếu field)",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"date\": \"2026-12-24T00:00:00\",\n  \"endTime\": \"2026-12-24T23:30:00\",\n  \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n  \"startTime\": \"2026-12-24T18:00:00\",\n  \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n  \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm với sự góp mặt của các DJ hàng đầu thế giới.\",\n  \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/events",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "events"
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "*/*"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"id\": 101,\n  \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n  \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm...\",\n  \"date\": \"2026-12-24T00:00:00\",\n  \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\",\n  \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n  \"startTime\": \"2026-12-24T18:00:00\",\n  \"endTime\": \"2026-12-24T23:30:00\",\n  \"active\": true,\n  \"organizerName\": \"Nguyễn Đức Thiện\"\n}"
+                    },
+                    {
+                      "name": "Không có quyền truy cập (Không phải Admin)",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"date\": \"2026-12-24T00:00:00\",\n  \"endTime\": \"2026-12-24T23:30:00\",\n  \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n  \"startTime\": \"2026-12-24T18:00:00\",\n  \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n  \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm với sự góp mặt của các DJ hàng đầu thế giới.\",\n  \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/events",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "events"
+                          ]
+                        }
+                      },
+                      "status": "Forbidden",
+                      "code": 403,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "*/*"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"id\": 101,\n  \"title\": \"Lễ hội Âm nhạc Mùa hè NexEvent 2026\",\n  \"description\": \"Sự kiện âm nhạc EDM lớn nhất năm...\",\n  \"date\": \"2026-12-24T00:00:00\",\n  \"cover\": \"https://example.com/images/nexevent-edm-2026.jpg\",\n  \"location\": \"Sân vận động Mỹ Đình, Hà Nội\",\n  \"startTime\": \"2026-12-24T18:00:00\",\n  \"endTime\": \"2026-12-24T23:30:00\",\n  \"active\": true,\n  \"organizerName\": \"Nguyễn Đức Thiện\"\n}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "checkin",
+              "item": [
+                {
+                  "name": "Quét QR vào cổng",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"gate\": \"G1\",\n  \"qrToken\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/checkin",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "checkin"
+                      ]
+                    },
+                    "description": "User đưa qrcode của vé ra, Checker quét vé và nhập gate, sau đó gửi api về đây để kiểm soát"
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"gate\": \"G1\",\n  \"qrToken\": \"string\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/checkin",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "checkin"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "*/*"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"ticketId\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"eventName\": \"Đêm nhạc NexEvent 2026\",\n  \"ticketTypeName\": \"VVIP - Khu vực sát sân khấu\",\n  \"customerName\": \"Nguyễn Đức Thiện\",\n  \"customerEmail\": \"thien@example.com\",\n  \"checkedInAt\": \"2001-05-27T12:09:20.096Z\",\n  \"gate\": \"Cổng A - Cửa số 1\",\n  \"staffName\": \"Bảo vệ Nguyễn Văn A\"\n}"
+                    }
+                  ]
+                },
+                {
+                  "name": "Quét QR vào cổng - TH đã sử dụng trước đó",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "*/*"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"gate\": \"G1\",\n  \"qrToken\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/checkin",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "checkin"
+                      ]
+                    },
+                    "description": "User đưa qrcode của vé ra, Checker quét vé và nhập gate, sau đó gửi api về đây để kiểm soát"
+                  },
+                  "response": [
+                    {
+                      "name": "OK",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"gate\": \"G1\",\n  \"qrToken\": \"string\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/checkin",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "checkin"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "*/*"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"ticketId\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"eventName\": \"Đêm nhạc NexEvent 2026\",\n  \"ticketTypeName\": \"VVIP - Khu vực sát sân khấu\",\n  \"customerName\": \"Nguyễn Đức Thiện\",\n  \"customerEmail\": \"thien@example.com\",\n  \"checkedInAt\": \"2001-05-27T12:09:20.096Z\",\n  \"gate\": \"Cổng A - Cửa số 1\",\n  \"staffName\": \"Bảo vệ Nguyễn Văn A\"\n}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "auth",
+              "item": [
+                {
+                  "name": "register",
+                  "item": [
+                    {
+                      "name": "Register a new user",
+                      "request": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"email\": \"abcxyz@gmail.com\",\n  \"fullname\": \"Nguyen Duc Thien\",\n  \"password\": \"Ducthienlq1\",\n  \"phone\": \"0965620068\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/auth/register",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "auth",
+                            "register"
+                          ]
+                        },
+                        "description": "Creates a new user account and sends a verification email to the provided address."
+                      },
+                      "response": [
+                        {
+                          "name": "User registered successfully, verification email sent",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"email\": \"abcxyz@gmail.com\",\n  \"fullname\": \"Nguyen Duc Thien\",\n  \"password\": \"Ducthienlq1\",\n  \"phone\": \"0965620068\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/auth/register",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "auth",
+                                "register"
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"id\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\",\n  \"fullname\": \"string\",\n  \"phone\": \"string\",\n  \"createdAt\": \"1953-05-21T22:58:14.644Z\",\n  \"updatedAt\": \"1992-05-22T04:00:28.020Z\",\n  \"role\": \"ADMIN\",\n  \"active\": false\n}"
+                        },
+                        {
+                          "name": "Invalid input or email already exists",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"email\": \"abcxyz@gmail.com\",\n  \"fullname\": \"Nguyen Duc Thien\",\n  \"password\": \"Ducthienlq1\",\n  \"phone\": \"0965620068\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/auth/register",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "auth",
+                                "register"
+                              ]
+                            }
+                          },
+                          "status": "Bad Request",
+                          "code": 400,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"id\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\",\n  \"fullname\": \"string\",\n  \"phone\": \"string\",\n  \"createdAt\": \"1953-05-21T22:58:14.644Z\",\n  \"updatedAt\": \"1992-05-22T04:00:28.020Z\",\n  \"role\": \"ADMIN\",\n  \"active\": false\n}"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "refresh",
+                  "item": [
+                    {
+                      "name": "Refresh access token",
+                      "request": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/auth/refresh",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "auth",
+                            "refresh"
+                          ]
+                        },
+                        "description": "Cấp lại Access Token mới dựa vào Refresh Token đính kèm trong Cookie"
+                      },
+                      "response": [
+                        {
+                          "name": "Làm mới token thành công",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/auth/refresh",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "auth",
+                                "refresh"
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"userLogin\": {\n    \"id\": \"string\",\n    \"email\": \"string\",\n    \"name\": \"string\"\n  },\n  \"access_token\": \"string\"\n}"
+                        },
+                        {
+                          "name": "Token không hợp lệ hoặc đã hết hạn",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/auth/refresh",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "auth",
+                                "refresh"
+                              ]
+                            }
+                          },
+                          "status": "Bad Request",
+                          "code": 400,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"userLogin\": {\n    \"id\": \"string\",\n    \"email\": \"string\",\n    \"name\": \"string\"\n  },\n  \"access_token\": \"string\"\n}"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "password",
+                  "item": [
+                    {
+                      "name": "reset-password",
+                      "item": [
+                        {
+                          "name": "Reset password",
+                          "request": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"confirmPassword\": \"Ducthienlq1\",\n  \"email\": \"example@gmail.com\",\n  \"newPassword\": \"Ducthienlq1\",\n  \"otp\": \"123456\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/auth/password/reset-password",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "auth",
+                                "password",
+                                "reset-password"
+                              ]
+                            },
+                            "description": "Xác nhận OTP và tiến hành đặt lại mật khẩu mới"
+                          },
+                          "response": [
+                            {
+                              "name": "Mật khẩu được đổi thành công",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "*/*"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"confirmPassword\": \"Ducthienlq1\",\n  \"email\": \"example@gmail.com\",\n  \"newPassword\": \"Ducthienlq1\",\n  \"otp\": \"123456\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/auth/password/reset-password",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "auth",
+                                    "password",
+                                    "reset-password"
+                                  ]
+                                }
+                              },
+                              "status": "OK",
+                              "code": 200,
+                              "_postman_previewlanguage": "text",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "*/*"
+                                }
+                              ],
+                              "cookie": [],
+                              "body": "string"
+                            },
+                            {
+                              "name": "OTP sai, hết hạn, hoặc nhập sai quá nhiều lần",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "*/*"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"confirmPassword\": \"Ducthienlq1\",\n  \"email\": \"example@gmail.com\",\n  \"newPassword\": \"Ducthienlq1\",\n  \"otp\": \"123456\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/auth/password/reset-password",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "auth",
+                                    "password",
+                                    "reset-password"
+                                  ]
+                                }
+                              },
+                              "status": "Bad Request",
+                              "code": 400,
+                              "_postman_previewlanguage": "text",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "*/*"
+                                }
+                              ],
+                              "cookie": [],
+                              "body": "string"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "forgot-password",
+                      "item": [
+                        {
+                          "name": "Forgot password",
+                          "request": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"email\": \"example@gmail.com\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/auth/password/forgot-password",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "auth",
+                                "password",
+                                "forgot-password"
+                              ]
+                            },
+                            "description": "Gửi mã OTP 6 số về email của người dùng"
+                          },
+                          "response": [
+                            {
+                              "name": "Mã OTP đã được gửi thành công",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "*/*"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"email\": \"example@gmail.com\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/auth/password/forgot-password",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "auth",
+                                    "password",
+                                    "forgot-password"
+                                  ]
+                                }
+                              },
+                              "status": "OK",
+                              "code": 200,
+                              "_postman_previewlanguage": "text",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "*/*"
+                                }
+                              ],
+                              "cookie": [],
+                              "body": "string"
+                            },
+                            {
+                              "name": "Email không hợp lệ hoặc không tồn tại trong hệ thống",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "*/*"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"email\": \"example@gmail.com\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/auth/password/forgot-password",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "auth",
+                                    "password",
+                                    "forgot-password"
+                                  ]
+                                }
+                              },
+                              "status": "Bad Request",
+                              "code": 400,
+                              "_postman_previewlanguage": "text",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "*/*"
+                                }
+                              ],
+                              "cookie": [],
+                              "body": "string"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "name": "change",
+                      "item": [
+                        {
+                          "name": "Change password",
+                          "request": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"confirmPassword\": \"Ducthienlq1\",\n  \"newPassword\": \"Ducthienlq1\",\n  \"oldPassword\": \"Ducthienlq1\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/auth/password/change",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "auth",
+                                "password",
+                                "change"
+                              ]
+                            },
+                            "description": "Đổi mật khẩu mới (Quên mật khẩu)"
+                          },
+                          "response": [
+                            {
+                              "name": "Đổi mật khẩu thành công",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "*/*"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"confirmPassword\": \"Ducthienlq1\",\n  \"newPassword\": \"Ducthienlq1\",\n  \"oldPassword\": \"Ducthienlq1\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/auth/password/change",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "auth",
+                                    "password",
+                                    "change"
+                                  ]
+                                }
+                              },
+                              "status": "OK",
+                              "code": 200,
+                              "_postman_previewlanguage": "text",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "*/*"
+                                }
+                              ],
+                              "cookie": [],
+                              "body": "string"
+                            },
+                            {
+                              "name": "Dữ liệu không hợp lệ (Ví dụ: Mật khẩu mới quá yếu, mã xác nhận/Token bị sai hoặc đã hết hạn)",
+                              "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                  {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                  },
+                                  {
+                                    "key": "Accept",
+                                    "value": "*/*"
+                                  },
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "body": {
+                                  "mode": "raw",
+                                  "raw": "{\n  \"confirmPassword\": \"Ducthienlq1\",\n  \"newPassword\": \"Ducthienlq1\",\n  \"oldPassword\": \"Ducthienlq1\"\n}",
+                                  "options": {
+                                    "raw": {
+                                      "headerFamily": "json",
+                                      "language": "json"
+                                    }
+                                  }
+                                },
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/auth/password/change",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "auth",
+                                    "password",
+                                    "change"
+                                  ]
+                                }
+                              },
+                              "status": "Bad Request",
+                              "code": 400,
+                              "_postman_previewlanguage": "text",
+                              "header": [
+                                {
+                                  "key": "Content-Type",
+                                  "value": "*/*"
+                                }
+                              ],
+                              "cookie": [],
+                              "body": "string"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "login",
+                  "item": [
+                    {
+                      "name": "Authenticate user",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "exec": [
+                              "if (pm.response.code === 200) {\r",
+                              "    var jsonData = pm.response.json();\r",
+                              "    \r",
+                              "    if (jsonData.data && jsonData.data.access_token) {\r",
+                              "        var token = jsonData.data.access_token;\r",
+                              "        \r",
+                              "        // Set vào collection variable\r",
+                              "        pm.collectionVariables.set(\"bearerToken\", token);\r",
+                              "        \r",
+                              "        // Set vào global (backup)\r",
+                              "        pm.globals.set(\"bearerToken\", token);\r",
+                              "        \r",
+                              "        console.log(\"✅ Token đã set thành công!\");\r",
+                              "        console.log(\"Token:\", token.substring(0, 30) + \"...\");\r",
+                              "    } else {\r",
+                              "        console.log(\"❌ Không tìm thấy access_token trong response\");\r",
+                              "        console.log(\"Response data:\", JSON.stringify(jsonData));\r",
+                              "    }\r",
+                              "}\r",
+                              "pm.test(\"Kịch bản 1 - Status code phải là 200 OK\", function () {\r",
+                              "    pm.response.to.have.status(200);\r",
+                              "});\r",
+                              "\r",
+                              "pm.test(\"Kịch bản 1 - Phải trả về thông báo thành công và có Object data\", function () {\r",
+                              "    var jsonData = pm.response.json();\r",
+                              "    pm.expect(jsonData.message).to.include(\"CALL API Succeeded\");\r",
+                              "    pm.expect(jsonData.data).to.have.property(\"access_token\");\r",
+                              "});"
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        },
+                        {
+                          "listen": "prerequest",
+                          "script": {
+                            "exec": [
+                              ""
+                            ],
+                            "type": "text/javascript",
+                            "packages": {},
+                            "requests": {}
+                          }
+                        }
+                      ],
+                      "request": {
+                        "auth": {
+                          "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"email\": \"nguyenducthienlq1@gmail.com\",\n  \"password\": \"Ducthienlq1\"\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/auth/login",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "auth",
+                            "login"
+                          ]
+                        },
+                        "description": "Logs in the user. Returns an Access Token"
+                      },
+                      "response": [
+                        {
+                          "name": "Login successful or 2FA required",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"email\": \"nguyenducthienlq1@gmail.com\",\n  \"password\": \"Ducthienlq1\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/auth/login",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "auth",
+                                "login"
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"userLogin\": {\n    \"id\": \"string\",\n    \"email\": \"string\",\n    \"name\": \"string\"\n  },\n  \"access_token\": \"string\"\n}"
+                        },
+                        {
+                          "name": "Account not activated or blocked",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"email\": \"nguyenducthienlq1@gmail.com\",\n  \"password\": \"Ducthienlq1\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/auth/login",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "auth",
+                                "login"
+                              ]
+                            }
+                          },
+                          "status": "Bad Request",
+                          "code": 400,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"userLogin\": {\n    \"id\": \"string\",\n    \"email\": \"string\",\n    \"name\": \"string\"\n  },\n  \"access_token\": \"string\"\n}"
+                        },
+                        {
+                          "name": "Invalid credentials",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                              },
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "body": {
+                              "mode": "raw",
+                              "raw": "{\n  \"email\": \"nguyenducthienlq1@gmail.com\",\n  \"password\": \"Ducthienlq1\"\n}",
+                              "options": {
+                                "raw": {
+                                  "headerFamily": "json",
+                                  "language": "json"
+                                }
+                              }
+                            },
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/auth/login",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "auth",
+                                "login"
+                              ]
+                            }
+                          },
+                          "status": "Unauthorized",
+                          "code": 401,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"userLogin\": {\n    \"id\": \"string\",\n    \"email\": \"string\",\n    \"name\": \"string\"\n  },\n  \"access_token\": \"string\"\n}"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "ticket",
+              "item": [
+                {
+                  "name": "me",
+                  "item": [
+                    {
+                      "name": "Xem vé sự kiện (USER)",
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "*/*"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/v1/ticket/me?status=UNUSED&page=0&size=10&sort=orderItem.ticketType.event.startTime,ASC",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "v1",
+                            "ticket",
+                            "me"
+                          ],
+                          "query": [
+                            {
+                              "key": "status",
+                              "value": "UNUSED"
+                            },
+                            {
+                              "key": "page",
+                              "value": "0",
+                              "description": "Zero-based page index (0..N)"
+                            },
+                            {
+                              "key": "size",
+                              "value": "10",
+                              "description": "The size of the page to be returned"
+                            },
+                            {
+                              "key": "sort",
+                              "value": "orderItem.ticketType.event.startTime,ASC",
+                              "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported."
+                            }
+                          ]
+                        },
+                        "description": "Lấy tất cả vé của 1 người theo nhiều tiêu chí (Có phân trang)"
+                      },
+                      "response": [
+                        {
+                          "name": "OK",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "*/*"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/api/v1/ticket/me?status=UNUSED&page=0&size=10&sort=orderItem.ticketType.event.startTime,ASC",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "api",
+                                "v1",
+                                "ticket",
+                                "me"
+                              ],
+                              "query": [
+                                {
+                                  "key": "status",
+                                  "value": "UNUSED"
+                                },
+                                {
+                                  "description": "Zero-based page index (0..N)",
+                                  "key": "page",
+                                  "value": "0"
+                                },
+                                {
+                                  "description": "The size of the page to be returned",
+                                  "key": "size",
+                                  "value": "10"
+                                },
+                                {
+                                  "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+                                  "key": "sort",
+                                  "value": "orderItem.ticketType.event.startTime,ASC"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "*/*"
+                            }
+                          ],
+                          "cookie": [],
+                          "body": "{\n  \"totalElements\": 2749,\n  \"totalPages\": 7277,\n  \"size\": 6744,\n  \"content\": [\n    {\n      \"ticketId\": \"string\",\n      \"eventName\": \"string\",\n      \"eventStartTime\": \"2025-03-23T07:19:12.044Z\",\n      \"eventLocation\": \"string\",\n      \"ticketTypeName\": \"string\",\n      \"status\": \"string\",\n      \"qrCode\": \"string\"\n    },\n    {\n      \"ticketId\": \"string\",\n      \"eventName\": \"string\",\n      \"eventStartTime\": \"2002-02-23T00:01:02.361Z\",\n      \"eventLocation\": \"string\",\n      \"ticketTypeName\": \"string\",\n      \"status\": \"string\",\n      \"qrCode\": \"string\"\n    }\n  ],\n  \"number\": 2974,\n  \"sort\": {\n    \"empty\": true,\n    \"sorted\": false,\n    \"unsorted\": true\n  },\n  \"first\": true,\n  \"last\": false,\n  \"numberOfElements\": 5690,\n  \"pageable\": {\n    \"offset\": 6359,\n    \"sort\": {\n      \"empty\": true,\n      \"sorted\": false,\n      \"unsorted\": true\n    },\n    \"paged\": false,\n    \"pageSize\": 3937,\n    \"pageNumber\": 9402,\n    \"unpaged\": false\n  },\n  \"empty\": true\n}"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "dashboard",
+              "item": [
+                {
+                  "name": "events",
+                  "item": [
+                    {
+                      "name": "{eventId}",
+                      "item": [
+                        {
+                          "name": "live-stream",
+                          "item": [
+                            {
+                              "name": "Mở luồng Live Data (SSE) theo sự kiện",
+                              "request": {
+                                "method": "GET",
+                                "header": [
+                                  {
+                                    "key": "Accept",
+                                    "value": "text/event-stream"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/dashboard/events/:eventId/live-stream",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "dashboard",
+                                    "events",
+                                    ":eventId",
+                                    "live-stream"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "eventId",
+                                      "value": "9153"
+                                    }
+                                  ]
+                                },
+                                "description": "Dành cho Frontend gọi để lắng nghe sự kiện Check-in và cập nhật các widget biểu đồ realtime của từng sự kiện"
+                              },
+                              "response": [
+                                {
+                                  "name": "OK",
+                                  "originalRequest": {
+                                    "method": "GET",
+                                    "header": [
+                                      {
+                                        "key": "Accept",
+                                        "value": "text/event-stream"
+                                      },
+                                      {
+                                        "description": "Added as a part of security scheme: bearer",
+                                        "key": "Authorization",
+                                        "value": "Bearer <token>"
+                                      }
+                                    ],
+                                    "url": {
+                                      "raw": "{{baseUrl}}/api/v1/dashboard/events/:eventId/live-stream",
+                                      "host": [
+                                        "{{baseUrl}}"
+                                      ],
+                                      "path": [
+                                        "api",
+                                        "v1",
+                                        "dashboard",
+                                        "events",
+                                        ":eventId",
+                                        "live-stream"
+                                      ],
+                                      "variable": [
+                                        {
+                                          "key": "eventId",
+                                          "value": "9153"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "status": "OK",
+                                  "code": 200,
+                                  "_postman_previewlanguage": "text",
+                                  "header": [
+                                    {
+                                      "key": "Content-Type",
+                                      "value": "text/event-stream"
+                                    }
+                                  ],
+                                  "cookie": [],
+                                  "body": "{\n  \"timeout\": 2051\n}"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "admin",
+              "item": [
+                {
+                  "name": "events",
+                  "item": [
+                    {
+                      "name": "{eventId}",
+                      "item": [
+                        {
+                          "name": "ticket-types",
+                          "item": [
+                            {
+                              "name": "Xem TOÀN BỘ vé sự kiện (Admin)",
+                              "request": {
+                                "method": "GET",
+                                "header": [
+                                  {
+                                    "key": "Accept",
+                                    "value": "*/*"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/api/v1/admin/events/:eventId/ticket-types?page=0&size=10&sortBy=id",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "api",
+                                    "v1",
+                                    "admin",
+                                    "events",
+                                    ":eventId",
+                                    "ticket-types"
+                                  ],
+                                  "query": [
+                                    {
+                                      "key": "page",
+                                      "value": "0"
+                                    },
+                                    {
+                                      "key": "size",
+                                      "value": "10"
+                                    },
+                                    {
+                                      "key": "sortBy",
+                                      "value": "id"
+                                    }
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "eventId",
+                                      "value": "9153"
+                                    }
+                                  ]
+                                },
+                                "description": "Lấy tất cả vé (cả ẩn và hiện) của 1 sự kiện (Có phân trang)"
+                              },
+                              "response": [
+                                {
+                                  "name": "OK",
+                                  "originalRequest": {
+                                    "method": "GET",
+                                    "header": [
+                                      {
+                                        "key": "Accept",
+                                        "value": "*/*"
+                                      },
+                                      {
+                                        "description": "Added as a part of security scheme: bearer",
+                                        "key": "Authorization",
+                                        "value": "Bearer <token>"
+                                      }
+                                    ],
+                                    "url": {
+                                      "raw": "{{baseUrl}}/api/v1/admin/events/:eventId/ticket-types?page=0&size=10&sortBy=id",
+                                      "host": [
+                                        "{{baseUrl}}"
+                                      ],
+                                      "path": [
+                                        "api",
+                                        "v1",
+                                        "admin",
+                                        "events",
+                                        ":eventId",
+                                        "ticket-types"
+                                      ],
+                                      "query": [
+                                        {
+                                          "key": "page",
+                                          "value": "0"
+                                        },
+                                        {
+                                          "key": "size",
+                                          "value": "10"
+                                        },
+                                        {
+                                          "key": "sortBy",
+                                          "value": "id"
+                                        }
+                                      ],
+                                      "variable": [
+                                        {
+                                          "key": "eventId",
+                                          "value": "9153"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "status": "OK",
+                                  "code": 200,
+                                  "_postman_previewlanguage": "text",
+                                  "header": [
+                                    {
+                                      "key": "Content-Type",
+                                      "value": "*/*"
+                                    }
+                                  ],
+                                  "cookie": [],
+                                  "body": "{\n  \"totalElements\": 6305,\n  \"totalPages\": 2661,\n  \"size\": 8691,\n  \"content\": [\n    {\n      \"id\": 2504,\n      \"title\": \"string\",\n      \"description\": \"string\",\n      \"price\": 6628.809208442644,\n      \"totalQuantity\": 821,\n      \"soldQuantity\": 2266,\n      \"remainQuantity\": 2702,\n      \"startTime\": \"2012-03-29T09:41:29.702Z\",\n      \"endTime\": \"1995-04-19T18:04:00.240Z\",\n      \"status\": \"AVAILABLE\"\n    },\n    {\n      \"id\": 6417,\n      \"title\": \"string\",\n      \"description\": \"string\",\n      \"price\": 3017.28147697486,\n      \"totalQuantity\": 9581,\n      \"soldQuantity\": 7486,\n      \"remainQuantity\": 5032,\n      \"startTime\": \"2010-04-03T07:43:51.374Z\",\n      \"endTime\": \"2013-09-09T19:56:13.689Z\",\n      \"status\": \"SOLD_OUT\"\n    }\n  ],\n  \"number\": 9421,\n  \"sort\": {\n    \"empty\": true,\n    \"sorted\": false,\n    \"unsorted\": true\n  },\n  \"first\": false,\n  \"last\": true,\n  \"numberOfElements\": 7724,\n  \"pageable\": {\n    \"offset\": 8464,\n    \"sort\": {\n      \"empty\": false,\n      \"sorted\": true,\n      \"unsorted\": false\n    },\n    \"paged\": true,\n    \"pageSize\": 938,\n    \"pageNumber\": 3467,\n    \"unpaged\": false\n  },\n  \"empty\": false\n}"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "payment",
+              "item": [
+                {
+                  "name": "Subscribe",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuZ3V5ZW5kdWN0aGllbmxxMUBnbWFpbC5jb20iLCJwZXJtaXNzaW9uIjpbIlVTRVIiLCJGQUNUT1JfUEFTU1dPUkQiXSwiZXhwIjoxNzgwMDQ5MzEyLCJpYXQiOjE3Nzk5NTkzMTIsInVzZXIiOnsiaWQiOiIzZGRkY2MwNy0wNjg1LTRlYjktYmUyYy1kYWE0YTUyNmQ3YTciLCJlbWFpbCI6Im5ndXllbmR1Y3RoaWVubHExQGdtYWlsLmNvbSIsIm5hbWUiOiJOZ3V5ZW4gRHVjIFRoaWVuIn19.WSmCWqoeJs2EPkqE8s-eofhQkfXZ4Vt7DCGMeKSnKgzSWRP_nUXQLkZJI8lY6gpL12NYLU3u-vYZ9faGsNSf4Q",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/payments/subscribe/15",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "payments",
+                        "subscribe",
+                        "15"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Webhook",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuZ3V5ZW5kdWN0aGllbmxxMUBnbWFpbC5jb20iLCJwZXJtaXNzaW9uIjpbIlVTRVIiLCJGQUNUT1JfUEFTU1dPUkQiXSwiZXhwIjoxNzgwMDQ5MzEyLCJpYXQiOjE3Nzk5NTkzMTIsInVzZXIiOnsiaWQiOiIzZGRkY2MwNy0wNjg1LTRlYjktYmUyYy1kYWE0YTUyNmQ3YTciLCJlbWFpbCI6Im5ndXllbmR1Y3RoaWVubHExQGdtYWlsLmNvbSIsIm5hbWUiOiJOZ3V5ZW4gRHVjIFRoaWVuIn19.WSmCWqoeJs2EPkqE8s-eofhQkfXZ4Vt7DCGMeKSnKgzSWRP_nUXQLkZJI8lY6gpL12NYLU3u-vYZ9faGsNSf4Q",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/payments/webhook",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "payments",
+                        "webhook"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Create Link Payment",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/payments/create-payment-link/:orderId",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "payments",
+                        "create-payment-link",
+                        ":orderId"
+                      ],
+                      "variable": [
+                        {
+                          "key": "orderId",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "bearerToken",
+      "value": ""
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import com.nexevent.nexevent.domains.dto.request.ChangePasswordDTO;
 import com.nexevent.nexevent.domains.dto.request.LoginDTO;
 import com.nexevent.nexevent.domains.dto.request.RegisterDTO;
 import com.nexevent.nexevent.domains.entities.User;
+import com.nexevent.nexevent.repositories.EventRepository;
 import com.nexevent.nexevent.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,6 +37,9 @@ public class AuthControllerTest extends BaseIntegrationTest {
     private UserRepository userRepository; // Dùng để soi Database xem data có vào thật không
 
     @Autowired
+    private EventRepository eventRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder; // Dùng để băm mật khẩu lúc tạo data test
 
 
@@ -44,6 +48,7 @@ public class AuthControllerTest extends BaseIntegrationTest {
     // Việc này giúp dọn dẹp sạch Database ảo, đảm bảo các bài test không bị "đá" data của nhau.
     @BeforeEach
     void cleanDatabase() {
+        eventRepository.deleteAll();
         userRepository.deleteAll();
     }
 
